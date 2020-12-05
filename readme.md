@@ -1,7 +1,7 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Тё](https://up.htmlacademy.ru/nodejs/3/user/1123341).
-* Наставник: `Неизвестно`.
+* Наставник: `Андрей Цапко`.
 
 ---
 
