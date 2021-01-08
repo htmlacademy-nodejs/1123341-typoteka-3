@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run eslint",
     "eslint": "eslint --ext .js src/",
-    "start": "node ./src/service/service.js --generate 10"
+    "start": "node ./src/service/service.js",
+    "start.dev": "nodemon ./src/service/service.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
   "homepage": "https://github.com/tyort/1123341-typoteka-3#readme",
   "devDependencies": {
     "eslint": "7.15.0",
-    "eslint-config-htmlacademy": "0.6.0"
+    "eslint-config-htmlacademy": "0.6.0",
+    "nodemon": "2.0.6"
   },
   "dependencies": {
     "dayjs": "1.9.6"
