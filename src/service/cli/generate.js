@@ -1,9 +1,14 @@
 'use strict';
 
 const dayjs = require(`dayjs`);
-const fs = require(`fs`);
+const fs = require(`fs`).promises;
+const chalk = require(`chalk`);
 const {getRandomInt} = require(`../../utils`);
-const {DateCypher, titles, announces, categories} = require(`../../constants`);
+const {DateCypher} = require(`../../constants`);
+
+const FILE_ANNOUNCES = `../../data/announces.txt`;
+const FILE_TITLES = `../../data/titles.txt`;
+const FILE_CATEGORIES = `../../data/categories.txt`;
 const DEFAULT_COUNT = 1;
 const FILE_NAME = `mocks.json`;
 
@@ -12,7 +17,18 @@ const generateDate = () => {
   return new Date(milliseconds);
 };
 
-const generateCategories = () => {
+const readContent = async (filePath) => {
+  try {
+    const content = await fs.readFile(filePath, `utf8`);
+    return content.trim().split(`\n`);
+
+  } catch (err) {
+    console.error(chalk.red(err));
+    return [];
+  }
+};
+
+const generateCategories = (categories) => {
   const words = new Set();
   Array(getRandomInt(1, categories.length)).fill(``)
     .map(() => words.add(categories[getRandomInt(0, categories.length - 1)]));
@@ -21,7 +37,7 @@ const generateCategories = () => {
 };
 
 
-const generateAnnounce = () => {
+const generateAnnounce = (announces) => {
   const sentences = new Set();
   for (let i = 0; i < getRandomInt(1, 5); i++) {
     sentences.add(announces[getRandomInt(0, announces.length - 1)]);
@@ -30,48 +46,38 @@ const generateAnnounce = () => {
   return announce;
 };
 
-const generateOffers = (count) => (
+const generateOffers = (count, announces, titles, categories) => (
   Array(count).fill({}).map(() => ({
     title: titles[getRandomInt(0, titles.length - 1)],
-    announce: generateAnnounce(),
-    fullText: generateAnnounce(),
+    announce: generateAnnounce(announces),
+    fullText: generateAnnounce(announces),
     createdDate: dayjs(generateDate()).format(`YYYY-MM-DD HH:mm:ss`),
-    category: generateCategories(),
+    category: generateCategories(categories),
   }))
 );
 
 module.exports = {
   name: `--generate`,
-  run(args) {
-    const [count] = args; // получение первого элемента массива
+  async run(args) {
+    const [count] = args;
+    const announces = await readContent(FILE_ANNOUNCES);
+    const titles = await readContent(FILE_TITLES);
+    const categories = await readContent(FILE_CATEGORIES);
+    let countOffer = DEFAULT_COUNT;
 
-    let countOffer = ``;
     if (Number.parseInt(count, 10) && Number.parseInt(count, 10) <= 1000) {
       countOffer = Number.parseInt(count, 10);
-
-    } else if (!Number.parseInt(count, 10)) {
-      countOffer = DEFAULT_COUNT;
-
-    } else {
-      countOffer = null;
     }
 
-    const content = countOffer ? JSON.stringify(generateOffers(countOffer)) : `false`; // преобразуем в строку JSON
+    const content = JSON.stringify(generateOffers(countOffer, announces, titles, categories));
 
-    // FILE_NAME - имя файла
-    // content - данные, которые требуется записать в файл
-    // колбэк-функция
-    fs.writeFile(FILE_NAME, content, (err) => {
-      if (content === `false`) {
-        return console.error(`Не больше 1000 публикаций`);
-      }
+    try {
+      await fs.writeFile(FILE_NAME, content);
+      return console.info(chalk.green(`Operation success. File created.`));
 
-      if (err) {
-        return console.error(`Can't write data to file...`);
-      }
-
-      return console.info(`Operation success. File created.`);
-    });
+    } catch (err) {
+      return console.error(chalk.red(`Can't write data to file...`));
+    }
   }
 };
 
