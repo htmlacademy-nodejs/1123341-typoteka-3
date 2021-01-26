@@ -4,7 +4,8 @@ const dayjs = require(`dayjs`);
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const {getRandomInt} = require(`../../utils`);
-const {DateCypher} = require(`../../constants`);
+const {DateCypher, MAX_ID_LENGTH} = require(`../../constants`);
+const {nanoid} = require(`nanoid`);
 
 const FILE_ANNOUNCES = `../../data/announces.txt`;
 const FILE_TITLES = `../../data/titles.txt`;
@@ -48,6 +49,7 @@ const generateAnnounce = (announces) => {
 
 const generateOffers = (count, announces, titles, categories) => (
   Array(count).fill({}).map(() => ({
+    id: nanoid(MAX_ID_LENGTH),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: generateAnnounce(announces),
     fullText: generateAnnounce(announces),
