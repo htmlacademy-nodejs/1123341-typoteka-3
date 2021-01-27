@@ -12,7 +12,7 @@ const {
   CategoriesService,
   ArticlesService,
   CommentsService,
-  SerachService
+  SearchService
 } = require(`../data-service`);
 
 const app = new Router();
@@ -22,7 +22,7 @@ const app = new Router();
 
   categories(app, new CategoriesService(mockData));
   articles(app, new ArticlesService(mockData), new CommentsService());
-  search(app, new SerachService(mockData));
+  search(app, new SearchService(mockData));
 })();
 
 module.exports = app;

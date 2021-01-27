@@ -2,79 +2,86 @@
 
 const {Router} = require(`express`);
 const {HttpCode} = require(`../../constants`);
-const commentValidator = require(`../middlewares/comment-validator`);
+const articleValidator = require(`../validators/article-validator`);
+const articleExistence = require(`../validators/article-existence`);
+const commentValidator = require(`../validators/comment-validator`);
 
 
-module.exports = (app, offerService, commentService) => {
+module.exports = (app, articlesService, commentService) => {
   const route = new Router();
-  app.use(`/offers`, route);
+  app.use(`/articles`, route);
 
   route.get(`/`, (req, res) => {
-    const offers = offerService.findAll();
-    res.status(HttpCode.OK).json(offers);
+    const articles = articlesService.findAll();
+    res
+      .status(HttpCode.OK)
+      .json(articles); // ????? посмотреть в консоли res.
   });
 
-  route.get(`/:offerId`, (req, res) => {
-    const {offerId} = req.params;
-    const offer = offerService.findOne(offerId);
+  route.get(`/:articleId`, (req, res) => {
+    const {articleId} = req.params; // ?????? посмотреть в консоли
+    const article = articlesService.findOne(articleId);
 
-    if (!offer) {
+    if (!article) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found with ${offerId}`);
+        .send(`Not found article with id:${articleId}`);
     }
 
     return res.status(HttpCode.OK)
-      .json(offer);
+      .json(article);
   });
 
-  // route.post(`/`, offerValidator, (req, res) => {
-  //   const offer = offerService.create(req.body);
+  route.post(`/`, articleValidator, (req, res) => {
+    const article = articlesService.create(req.body); // ????? req.body это новый article
 
-  //   return res.status(HttpCode.CREATED)
-  //     .json(offer);
-  // });
-
-  // route.put(`/:offerId`, offerValidator, (req, res) => {
-  //   const {offerId} = req.params;
-  //   const existOffer = offerService.findOne(offerId);
-
-  //   if (!existOffer) {
-  //     return res.status(HttpCode.NOT_FOUND)
-  //       .send(`Not found with ${offerId}`);
-  //   }
-
-    const updatedOffer = offerService.update(offerId, req.body);
-
-    return res.status(HttpCode.OK)
-      .json(updatedOffer);
+    return res
+      .status(HttpCode.CREATED) // ???? такого ключа пока нет
+      .json(article);
   });
 
-  route.delete(`/:offerId`, (req, res) => {
-    const {offerId} = req.params;
-    const offer = offerService.drop(offerId);
+  route.put(`/:articleId`, articleValidator, (req, res) => {
+    const {articleId} = req.params;
+    const existArticle = articlesService.findOne(articleId);
 
-    if (!offer) {
+    if (!existArticle) {
       return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found`);
+        .send(`Not found article with id:${articleId}`);
     }
 
-    return res.status(HttpCode.OK)
-      .json(offer);
+    // ????? в req.body должны быть измененные данные
+    const updatedArticle = articlesService.update(articleId, req.body);
+
+    return res
+      .status(HttpCode.OK)
+      .json(updatedArticle);
   });
 
-  route.get(`/:offerId/comments`, offerExist(offerService), (req, res) => {
-    const {offer} = res.locals;
-    const comments = commentService.findAll(offer);
+  route.delete(`/:articleId`, (req, res) => {
+    const {articleId} = req.params;
+    const deletedArticle = articlesService.drop(articleId);
+
+    if (!deletedArticle) {
+      return res.status(HttpCode.NOT_FOUND)
+        .send(`We couldn't delete article with id:${articleId}, because he didn't exist`);
+    }
+
+    return res
+      .status(HttpCode.OK)
+      .json(deletedArticle);
+  });
+
+  route.get(`/:articleId/comments`, articleExistence(articlesService), (req, res) => {
+    const {article} = res.locals; // ??????
+    const comments = commentService.findAll(article);
 
     res.status(HttpCode.OK)
       .json(comments);
-
   });
 
-  route.delete(`/:offerId/comments/:commentId`, offerExist(offerService), (req, res) => {
-    const {offer} = res.locals;
+  route.delete(`/:articleId/comments/:commentId`, articleExistence(articlesService), (req, res) => {
+    const {article} = res.locals;
     const {commentId} = req.params;
-    const deletedComment = commentService.drop(offer, commentId);
+    const deletedComment = commentService.drop(article, commentId);
 
     if (!deletedComment) {
       return res.status(HttpCode.NOT_FOUND)
@@ -85,11 +92,12 @@ module.exports = (app, offerService, commentService) => {
       .json(deletedComment);
   });
 
-  route.post(`/:offerId/comments`, [offerExist(offerService), commentValidator], (req, res) => {
-    const {offer} = res.locals;
-    const comment = commentService.create(offer, req.body);
+  route.post(`/:articleId/comments`, [articleExistence(articlesService), commentValidator], (req, res) => {
+    const {article} = res.locals;
+    const comment = commentService.create(article, req.body);
 
     return res.status(HttpCode.CREATED)
       .json(comment);
   });
 };
+
