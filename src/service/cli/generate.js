@@ -3,14 +3,16 @@
 const dayjs = require(`dayjs`);
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
-const {getRandomInt} = require(`../../utils`);
+const {getRandomInt, shuffle} = require(`../../utils`);
 const {DateCypher, MAX_ID_LENGTH} = require(`../../constants`);
 const {nanoid} = require(`nanoid`);
 
 const FILE_ANNOUNCES = `../../data/announces.txt`;
 const FILE_TITLES = `../../data/titles.txt`;
 const FILE_CATEGORIES = `../../data/categories.txt`;
+const FILE_COMMENTS = `../../data/comments.txt`;
 const DEFAULT_COUNT = 1;
+const MAX_COMMENTS = 6;
 const FILE_NAME = `mocks.json`;
 
 const generateDate = () => {
@@ -37,6 +39,16 @@ const generateCategories = (categories) => {
   return [...words];
 };
 
+const generateComments = (count, comments) => (
+  Array(count)
+    .fill({})
+    .map(() => ({
+      id: nanoid(MAX_ID_LENGTH),
+      text: shuffle(comments) // перетасовываем массив цитат
+        .slice(0, getRandomInt(1, 3)) // подбираем количество цитат
+        .join(` `), // соединяем в одну строку
+    }))
+);
 
 const generateAnnounce = (announces) => {
   const sentences = new Set();
@@ -47,7 +59,7 @@ const generateAnnounce = (announces) => {
   return announce;
 };
 
-const generateOffers = (count, announces, titles, categories) => (
+const generateOffers = (count, announces, titles, categories, comments) => (
   Array(count).fill({}).map(() => ({
     id: nanoid(MAX_ID_LENGTH),
     title: titles[getRandomInt(0, titles.length - 1)],
@@ -55,6 +67,7 @@ const generateOffers = (count, announces, titles, categories) => (
     fullText: generateAnnounce(announces),
     createdDate: dayjs(generateDate()).format(`YYYY-MM-DD HH:mm:ss`),
     category: generateCategories(categories),
+    comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments)
   }))
 );
 
@@ -65,13 +78,14 @@ module.exports = {
     const announces = await readContent(FILE_ANNOUNCES);
     const titles = await readContent(FILE_TITLES);
     const categories = await readContent(FILE_CATEGORIES);
+    const comments = await readContent(FILE_COMMENTS);
     let countOffer = DEFAULT_COUNT;
 
-    if (Number.parseInt(count, 10) && Number.parseInt(count, 10) <= 1000) {
+    if (!!Number.parseInt(count, 10) && Number.parseInt(count, 10) <= 1000) {
       countOffer = Number.parseInt(count, 10);
     }
 
-    const content = JSON.stringify(generateOffers(countOffer, announces, titles, categories));
+    const content = JSON.stringify(generateOffers(countOffer, announces, titles, categories, comments));
 
     try {
       await fs.writeFile(FILE_NAME, content);
