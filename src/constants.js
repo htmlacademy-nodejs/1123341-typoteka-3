@@ -22,12 +22,15 @@ const HttpCode = {
   UNAUTHORIZED: 401,
 };
 
+const API_PREFIX = `/api`;
+
 module.exports = {
   DateCypher,
   DEFAULT_COMMAND,
   USER_ARGV_INDEX,
   ExitCode,
   HttpCode,
-  MAX_ID_LENGTH
+  MAX_ID_LENGTH,
+  API_PREFIX
 };
 
