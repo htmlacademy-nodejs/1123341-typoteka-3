@@ -2,14 +2,11 @@
 
 const {Router} = require(`express`);
 const {HttpCode} = require(`../../constants`);
-const offerValidator = require(`../middlewares/offer-validator`);
-const offerExist = require(`../middlewares/offer-exists`);
 const commentValidator = require(`../middlewares/comment-validator`);
 
-// маршрут оборачиваем в функцию
+
 module.exports = (app, offerService, commentService) => {
   const route = new Router();
-
   app.use(`/offers`, route);
 
   route.get(`/`, (req, res) => {
@@ -30,21 +27,21 @@ module.exports = (app, offerService, commentService) => {
       .json(offer);
   });
 
-  route.post(`/`, offerValidator, (req, res) => {
-    const offer = offerService.create(req.body);
+  // route.post(`/`, offerValidator, (req, res) => {
+  //   const offer = offerService.create(req.body);
 
-    return res.status(HttpCode.CREATED)
-      .json(offer);
-  });
+  //   return res.status(HttpCode.CREATED)
+  //     .json(offer);
+  // });
 
-  route.put(`/:offerId`, offerValidator, (req, res) => {
-    const {offerId} = req.params;
-    const existOffer = offerService.findOne(offerId);
+  // route.put(`/:offerId`, offerValidator, (req, res) => {
+  //   const {offerId} = req.params;
+  //   const existOffer = offerService.findOne(offerId);
 
-    if (!existOffer) {
-      return res.status(HttpCode.NOT_FOUND)
-        .send(`Not found with ${offerId}`);
-    }
+  //   if (!existOffer) {
+  //     return res.status(HttpCode.NOT_FOUND)
+  //       .send(`Not found with ${offerId}`);
+  //   }
 
     const updatedOffer = offerService.update(offerId, req.body);
 
