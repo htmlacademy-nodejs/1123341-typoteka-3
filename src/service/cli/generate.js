@@ -88,10 +88,10 @@ module.exports = {
     offerShape.titles = await readContent(FILE_TITLES);
     offerShape.categories = await readContent(FILE_CATEGORIES);
     offerShape.comments = await readContent(FILE_COMMENTS);
-    offerShape.countOffer = DEFAULT_COUNT;
+    offerShape.countOffer = Number.parseInt(count, 10) ? Number.parseInt(count, 10) : DEFAULT_COUNT;
 
-    if (Number.parseInt(count, 10) && Number.parseInt(count, 10) <= 1000 && Number.parseInt(count, 10) > 0) {
-      offerShape.countOffer = Number.parseInt(count, 10);
+    if (offerShape.countOffer >= 1000 || offerShape.countOffer < 0) {
+      offerShape.countOffer = DEFAULT_COUNT;
     }
 
     const content = JSON.stringify(generateOffers(offerShape));

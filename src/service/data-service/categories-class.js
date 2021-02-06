@@ -5,13 +5,11 @@ class CategoryService {
     this._offers = offers;
   }
 
-  findAll() {
-    const categories = this._offers.reduce((acc, offer) => {
-      acc.add(...offer.category);
-      return acc;
-    }, new Set());
+  find() {
+    const categories = this._offers
+      .flatMap((offer) => offer.category);
 
-    return [...categories];
+    return new Set(categories);
   }
 }
 

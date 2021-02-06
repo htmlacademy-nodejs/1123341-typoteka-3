@@ -11,7 +11,7 @@ module.exports = (app, articlesService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, (req, res) => {
-    const articles = articlesService.findAll();
+    const articles = articlesService.find();
     res
       .status(HttpCode.OK)
       .json(articles); // ????? посмотреть в консоли res.
@@ -34,7 +34,7 @@ module.exports = (app, articlesService, commentService) => {
     const article = articlesService.create(req.body); // ????? req.body это новый article
 
     return res
-      .status(HttpCode.CREATED) // ???? такого ключа пока нет
+      .status(HttpCode.CREATED)
       .json(article);
   });
 
@@ -57,7 +57,7 @@ module.exports = (app, articlesService, commentService) => {
 
   route.delete(`/:articleId`, (req, res) => {
     const {articleId} = req.params;
-    const deletedArticle = articlesService.drop(articleId);
+    const deletedArticle = articlesService.delete(articleId);
 
     if (!deletedArticle) {
       return res.status(HttpCode.NOT_FOUND)
@@ -71,7 +71,7 @@ module.exports = (app, articlesService, commentService) => {
 
   route.get(`/:articleId/comments`, articleExistence(articlesService), (req, res) => {
     const {article} = res.locals; // ??????
-    const comments = commentService.findAll(article);
+    const comments = commentService.find(article);
 
     res.status(HttpCode.OK)
       .json(comments);
@@ -80,7 +80,7 @@ module.exports = (app, articlesService, commentService) => {
   route.delete(`/:articleId/comments/:commentId`, articleExistence(articlesService), (req, res) => {
     const {article} = res.locals;
     const {commentId} = req.params;
-    const deletedComment = commentService.drop(article, commentId);
+    const deletedComment = commentService.delete(article, commentId);
 
     if (!deletedComment) {
       return res.status(HttpCode.NOT_FOUND)

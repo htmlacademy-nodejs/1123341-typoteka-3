@@ -5,7 +5,7 @@ class SearchService {
     this._offers = offers;
   }
 
-  findAll(searchText) {
+  find(searchText) {
     return this._offers.
       filter((offer) => offer.title.includes(searchText));
   }

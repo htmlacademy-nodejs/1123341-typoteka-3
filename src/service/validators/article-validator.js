@@ -6,13 +6,13 @@ const articleKeys = [`announce`, `fullText`, `createdDate`, `title`, `category`,
 module.exports = (req, res, next) => {
   const newArticle = req.body;
   const keys = Object.keys(newArticle);
-
-  const keysExists = articleKeys.every((key) => keys.includes(key)); // ????? БЕЗ "id"
+  const keysExists = articleKeys.every((key) => keys.includes(key));
 
   if (!keysExists) {
-    res.status(HttpCode.BAD_REQUEST) // ????? такого ключа не существует
+    res.status(HttpCode.BAD_REQUEST)
       .send(`Bad request`);
-  }
 
-  next();
+  } else {
+    next();
+  }
 };
