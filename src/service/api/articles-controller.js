@@ -6,7 +6,6 @@ const articleValidator = require(`../validators/article-validator`);
 const articleExistence = require(`../validators/article-existence`);
 const commentValidator = require(`../validators/comment-validator`);
 
-
 module.exports = (app, articlesService, commentService) => {
   const route = new Router();
   app.use(`/articles`, route);

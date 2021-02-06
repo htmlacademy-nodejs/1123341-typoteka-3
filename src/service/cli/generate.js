@@ -59,8 +59,16 @@ const generateAnnounce = (announces) => {
   return announce;
 };
 
-const generateOffers = (count, announces, titles, categories, comments) => (
-  Array(count).fill({}).map(() => ({
+const generateOffers = (offerShape) => {
+  const {
+    titles,
+    announces,
+    categories,
+    comments,
+    countOffer
+  } = offerShape;
+
+  return Array(countOffer).fill({}).map(() => ({
     id: nanoid(MAX_ID_LENGTH),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: generateAnnounce(announces),
@@ -68,24 +76,25 @@ const generateOffers = (count, announces, titles, categories, comments) => (
     createdDate: dayjs(generateDate()).format(`YYYY-MM-DD HH:mm:ss`),
     category: generateCategories(categories),
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments)
-  }))
-);
+  }));
+};
 
 module.exports = {
   name: `--generate`,
   async run(args) {
+    let offerShape = {};
     const [count] = args;
-    const announces = await readContent(FILE_ANNOUNCES);
-    const titles = await readContent(FILE_TITLES);
-    const categories = await readContent(FILE_CATEGORIES);
-    const comments = await readContent(FILE_COMMENTS);
-    let countOffer = DEFAULT_COUNT;
+    offerShape.announces = await readContent(FILE_ANNOUNCES);
+    offerShape.titles = await readContent(FILE_TITLES);
+    offerShape.categories = await readContent(FILE_CATEGORIES);
+    offerShape.comments = await readContent(FILE_COMMENTS);
+    offerShape.countOffer = DEFAULT_COUNT;
 
-    if (!!Number.parseInt(count, 10) && Number.parseInt(count, 10) <= 1000) {
-      countOffer = Number.parseInt(count, 10);
+    if (Number.parseInt(count, 10) && Number.parseInt(count, 10) <= 1000 && Number.parseInt(count, 10) > 0) {
+      offerShape.countOffer = Number.parseInt(count, 10);
     }
 
-    const content = JSON.stringify(generateOffers(countOffer, announces, titles, categories, comments));
+    const content = JSON.stringify(generateOffers(offerShape));
 
     try {
       await fs.writeFile(FILE_NAME, content);
