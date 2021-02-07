@@ -1,13 +1,13 @@
 'use strict';
 
 class CategoryService {
-  constructor(offers) {
-    this._offers = offers;
+  constructor(articles) {
+    this._articles = articles;
   }
 
   find() {
-    const categories = this._offers
-      .flatMap((offer) => offer.category);
+    const categories = this._articles
+      .flatMap((article) => article.category);
 
     return [...new Set(categories)];
   }
