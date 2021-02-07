@@ -31,7 +31,7 @@ module.exports = (app, articlesService, commentService) => {
   });
 
   route.post(`/`, articleValidator, (req, res) => {
-    const article = articlesService.create(req.body); // ????? req.body это новый article
+    const article = articlesService.create(req.body);
 
     return res
       .status(HttpCode.CREATED)
