@@ -14,7 +14,7 @@ module.exports = (app, articlesService, commentService) => {
     const articles = articlesService.find();
     res
       .status(HttpCode.OK)
-      .json(articles); // ????? посмотреть в консоли res.
+      .json(articles);
   });
 
   route.get(`/:articleId`, (req, res) => {
@@ -31,7 +31,7 @@ module.exports = (app, articlesService, commentService) => {
   });
 
   route.post(`/`, articleValidator, (req, res) => {
-    const article = articlesService.create(req.body); // ????? req.body это новый article
+    const article = articlesService.create(req.body);
 
     return res
       .status(HttpCode.CREATED)
@@ -47,7 +47,6 @@ module.exports = (app, articlesService, commentService) => {
         .send(`Not found article with id:${articleId}`);
     }
 
-    // ????? в req.body должны быть измененные данные
     const updatedArticle = articlesService.update(articleId, req.body);
 
     return res
@@ -56,6 +55,7 @@ module.exports = (app, articlesService, commentService) => {
   });
 
   route.delete(`/:articleId`, (req, res) => {
+    // req.params: { articleId: 'frgO_n' }
     const {articleId} = req.params;
     const deletedArticle = articlesService.delete(articleId);
 
@@ -70,7 +70,7 @@ module.exports = (app, articlesService, commentService) => {
   });
 
   route.get(`/:articleId/comments`, articleExistence(articlesService), (req, res) => {
-    const {article} = res.locals; // ??????
+    const {article} = res.locals;
     const comments = commentService.find(article);
 
     res.status(HttpCode.OK)
