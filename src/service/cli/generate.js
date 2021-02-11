@@ -3,14 +3,15 @@
 const dayjs = require(`dayjs`);
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
+const path = require(`path`);
 const {getRandomInt, shuffle} = require(`../../utils`);
 const {DateCypher, MAX_ID_LENGTH} = require(`../../constants`);
 const {nanoid} = require(`nanoid`);
 
-const FILE_ANNOUNCES = `../../data/announces.txt`;
-const FILE_TITLES = `../../data/titles.txt`;
-const FILE_CATEGORIES = `../../data/categories.txt`;
-const FILE_COMMENTS = `../../data/comments.txt`;
+const FILE_ANNOUNCES = path.resolve(__dirname, `../../../data/announces.txt`);
+const FILE_TITLES = path.resolve(__dirname, `../../../data/titles.txt`);
+const FILE_CATEGORIES = path.resolve(__dirname, `../../../data/categories.txt`);
+const FILE_COMMENTS = path.resolve(__dirname, `../../../data/comments.txt`);
 const DEFAULT_COUNT = 1;
 const MAX_COMMENTS = 6;
 const FILE_NAME = `mocks.json`;

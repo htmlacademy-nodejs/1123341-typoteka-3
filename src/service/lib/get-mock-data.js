@@ -2,10 +2,10 @@
 
 const fs = require(`fs`).promises;
 const FILENAME = `mocks.json`;
-let data = null;
+let data = [];
 
 const getMockData = async () => {
-  if (data !== null) {
+  if (data.length > 0) {
     return data;
   }
 
@@ -15,7 +15,6 @@ const getMockData = async () => {
 
   } catch (err) {
     console.log(err);
-    throw err;
   }
 
   return data;
