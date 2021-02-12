@@ -4,6 +4,7 @@ const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
 
+// Главная страница
 mainRouter.get(`/`, async (req, res) => {
   const [articles, categories] = await Promise.all([
     api.getArticles(),
@@ -18,6 +19,7 @@ mainRouter.get(`/`, async (req, res) => {
 
   res.render(`./main/main`, {articles, categories, categoriesCapacity});
 });
+
 
 mainRouter.get(`/register`, (req, res) => res.render(`registration`));
 mainRouter.get(`/login`, (req, res) => res.render(`registration`));

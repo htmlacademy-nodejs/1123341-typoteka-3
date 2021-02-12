@@ -125,8 +125,6 @@ describe(`API returns category list`, () => {
       .get(`/categories`);
   });
 
-  console.log(response);
-
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
   test(`Returns list of 4 categories`, () => expect(response.body.length).toBe(4));
   test(`Category names are "Деревья", "Программирование", "Разное", "Музыка"`,
