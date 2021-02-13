@@ -5,7 +5,7 @@ const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const path = require(`path`);
 const {getRandomInt, shuffle} = require(`../../utils`);
-const {DateCypher, MAX_ID_LENGTH} = require(`../../constants`);
+const {DateCypher, MAX_ID_LENGTH, picsNames} = require(`../../constants`);
 const {nanoid} = require(`nanoid`);
 
 const FILE_ANNOUNCES = path.resolve(__dirname, `../../../data/announces.txt`);
@@ -20,6 +20,8 @@ const generateDate = () => {
   const milliseconds = getRandomInt(DateCypher.MIN, DateCypher.MAX);
   return new Date(milliseconds);
 };
+
+const getPictureFileName = (names) => names[getRandomInt(0, names.length - 1)];
 
 const readContent = async (filePath) => {
   try {
@@ -71,6 +73,7 @@ const generateOffers = (offerShape) => {
 
   return Array(countOffer).fill({}).map(() => ({
     id: nanoid(MAX_ID_LENGTH),
+    picture: getPictureFileName(picsNames),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: generateAnnounce(announces),
     fullText: generateAnnounce(announces),

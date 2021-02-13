@@ -31,6 +31,8 @@ const HttpCode = {
 
 const API_PREFIX = `/api`;
 
+const picsNames = [`forest`, `sea`, `skyscraper`, `sea-fullsize`];
+
 module.exports = {
   DateCypher,
   DEFAULT_COMMAND,
@@ -39,6 +41,7 @@ module.exports = {
   HttpCode,
   MAX_ID_LENGTH,
   API_PREFIX,
-  Env
+  Env,
+  picsNames
 };
 
