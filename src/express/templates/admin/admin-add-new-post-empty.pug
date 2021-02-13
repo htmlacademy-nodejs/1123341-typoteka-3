@@ -71,7 +71,7 @@ block content
       section.modal.modal--flex
         .popup.popup--new-publication.popup--flex
           .new-publication
-            form(action='#' method='POST')
+            form(action='/articles/add' method='POST')
               .new-publication__header
                 h1 Новая публикация
                 .new-publication__date-form
@@ -103,5 +103,3 @@ block content
                     label
                       textarea(rows='1' placeholder='Полный текст публикации')
         .modal__overlay
-  script(src='js/vendor.js')
-  script(src='js/main.js')

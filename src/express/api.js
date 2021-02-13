@@ -34,7 +34,7 @@ class API {
     return this._load(`/categories`);
   }
 
-  async createOffer(data) {
+  async createArticle(data) {
     return this._load(`/articles`, {
       method: `POST`,
       data
