@@ -4,7 +4,7 @@ block content
   .wrapper
     header.header
       a.header__logo.logo(href='#')
-        img.logo__image(src='img/icons/logo-image-only.svg' alt='логотип Тайпотеки')
+        img.logo__image(src='/img/icons/logo-image-only.svg' alt='логотип Тайпотеки')
         span.logo__name Типотека
       button.button.button--colored.header__button-new Новая запись
       .header__dropdown
@@ -79,36 +79,33 @@ block content
                   .new-publication__date-form-division
                     .new-publication__date-block
                       label(for='new-publication-date' aria-label='Календарь')
-                      input#new-publication-date(type='text' name='login' placeholder='21.03.2019')
+                      input#new-publication-date(type='text' name='login' placeholder='21.03.2019' value=article.createdDate)
                 button.new-publication__button.button.button--colored(type='submit') Опубликовать
               button.popup__button.button.button--popup-close(type='button' aria-label='Закрыть окно') Закрыть окно
               .new-publication__form.form
                 .form__wrapper.form__wrapper--intro
                   .form__field
                     label
-                      input(type='text' placeholder='Заголовок' value='Как правильно заводить машину' required)
+                      input(type='text' placeholder='Заголовок' value=article.title required)
                   .form__field.form__field--post-image
                     label
-                      input#image-name-field(type='text' value='moya_mashinka.jpg' placeholder='Фотография' readonly)
+                      input#image-name-field(type='text' value=`${article.picture}@1x.jpg` placeholder='Фотография' readonly)
                     .form__image-loader.form__image-loader--publication
                       label
                         input.visually-hidden(type='file')
                         | Обзор
                     button.button.button--transparent Удалить
-                  .new-publication__checkbox.new-publication__checkbox--auto
-                    input#checkbox-auto(type='checkbox' name='checkbox-auto')
-                    label(for='checkbox-auto') Автомобили
+                  each category in article.category
+                    div(class=`new-publication__checkbox new-publication__checkbox--${categories.get(category)}`)
+                      input(id=`checkbox-${categories.get(category)}` type='checkbox' name=`checkbox-${categories.get(category)}`)
+                      label(for=`checkbox-${categories.get(category)}`) #{category}
                   a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
                 .form__wrapper.form__wrapper--text
                   .form__field.form__field--publication-text
                     label
-                      textarea(rows='2' placeholder='Анонс публикации') Материнский холдинг возглавит гендиректор Google Сундар Пичаи. При этом больше половины голосов в компании останется у Пейджа и Брина.
+                      textarea(rows='2' placeholder='Анонс публикации') #{article.announce}
                   .form__field.form__field--publication-text
                     label
                       textarea(rows='5' placeholder='Полный текст публикации').
-                        Основатели Google Ларри Пейдж и Сергей Брин отойдут от руководства материнским холдингом Alphabet, сказано в сообщении компании. Пейдж занимал пост гендиректора, а Брин — президента Alphabet.
-                        
-                        Alphabet возглавит гендиректор Google Сундар Пичаи, он также продолжит руководить Google. Должность президента холдинга будет упразднена.
+                        #{article.fullText}
         .modal__overlay
-  script(src='js/vendor.js')
-  script(src='js/main.js')

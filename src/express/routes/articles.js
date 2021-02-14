@@ -3,6 +3,7 @@
 const {Router} = require(`express`);
 const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
+const dayjs = require(`dayjs`);
 const path = require(`path`);
 const {categories} = require(`../../constants`);
 
@@ -46,8 +47,9 @@ articlesRouter.get(`/add`, (req, res) => res.render(`./admin/admin-add-new-post-
 articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
 
 articlesRouter.get(`/edit/:id`, async (req, res) => {
-  const {articleId} = req.params;
-  const article = await api.getArticle(articleId);
+  const {id} = req.params;
+  const article = await api.getArticle(id);
+  article.createdDate = dayjs(article.createdDate).format(`DD.MM.YYYY`);
   res.render(`./admin/admin-add-new-post`, {article, categories}); // ?????? categories пока не используем как надо
 });
 
