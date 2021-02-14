@@ -71,7 +71,7 @@ block content
       section.modal.modal--flex
         .popup.popup--new-publication.popup--flex
           .new-publication
-            form(action='/articles/add' method='POST')
+            form(action='/articles/add' method='POST' enctype="multipart/form-data" autocomplete="off")
               .new-publication__header
                 h1 Новая публикация
                 .new-publication__date-form
@@ -79,27 +79,27 @@ block content
                   .new-publication__date-form-division
                     .new-publication__date-block
                       label(for='new-publication-date' aria-label='Календарь')
-                      input#new-publication-date(type='text' name='login' placeholder='21.03.2019')
+                      input#new-publication-date(type='text' name='public-date' placeholder='21.03.2019')
                 button.new-publication__button.button.button--colored(type='submit') Опубликовать
               button.popup__button.button.button--popup-close(type='button' aria-label='Закрыть окно') Закрыть окно
               .new-publication__form.form
                 .form__wrapper.form__wrapper--intro
                   .form__field
                     label
-                      input(type='text' placeholder='Заголовок' required)
+                      input(type='text' name=`title` placeholder='Заголовок' required)
                   .form__field.form__field--post-image
                     label
                       input#image-name-field(type='text' placeholder='Фотография' readonly)
                     .form__image-loader.form__image-loader--publication
                       label
-                        input.visually-hidden(type='file')
+                        input.visually-hidden(type='file' name="avatar")
                         | Обзор
                   a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
                 .form__wrapper.form__wrapper--text
                   .form__field.form__field--publication-text
                     label
-                      textarea(rows='1' placeholder='Анонс публикации')
+                      textarea(rows='1' name=`announce` placeholder='Анонс публикации')
                   .form__field.form__field--publication-text
                     label
-                      textarea(rows='1' placeholder='Полный текст публикации')
+                      textarea(rows='1' name=`full-text` placeholder='Полный текст публикации')
         .modal__overlay
