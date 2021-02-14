@@ -4,6 +4,7 @@ const {Router} = require(`express`);
 const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
 const path = require(`path`);
+const {categories} = require(`../../constants`);
 
 const UPLOAD_DIR = path.resolve(__dirname, `../upload/img/`);
 
@@ -22,17 +23,34 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
-  console.log(req);
+  const {body, file} = req;
+  const articleData = {
+    picture: file.filename,
+    createdDate: body[`public-date`],
+    title: body.title,
+    announce: body.announce,
+    fullText: body[`full-text`],
+    category: [`Разное`] // ???? надо исправить
+  };
+
+  try {
+    await api.createArticle(articleData);
+    res.redirect(`/my`);
+
+  } catch (error) {
+    res.redirect(`back`);
+  }
 });
 
-articlesRouter.get(`/add`, async (req, res) => {
-  const categories = await api.getCategories();
-  res.render(`./admin/admin-add-new-post-empty`, {categories});
+articlesRouter.get(`/add`, (req, res) => res.render(`./admin/admin-add-new-post-empty`));
+articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
+
+articlesRouter.get(`/edit/:id`, async (req, res) => {
+  const {articleId} = req.params;
+  const article = await api.getArticle(articleId);
+  res.render(`./admin/admin-add-new-post`, {article, categories}); // ?????? categories пока не используем как надо
 });
 
-
-articlesRouter.get(`/category/:id`, (req, res) => res.render(`publications-by-category`));
-articlesRouter.get(`/edit/:id`, (req, res) => res.render(`.admin/admin-add-new-post`));
 articlesRouter.get(`/:id`, (req, res) => res.render(`./post/post-user`));
 
 module.exports = articlesRouter;

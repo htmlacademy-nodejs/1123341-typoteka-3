@@ -33,6 +33,18 @@ const API_PREFIX = `/api`;
 
 const picsNames = [`forest`, `sea`, `skyscraper`, `sea-fullsize`];
 
+const categories = new Map([
+  [`Деревья`, `trees`],
+  [`За жизнь`, `for-life`],
+  [`Без рамки`, `frame-off`],
+  [`Разное`, `different`],
+  [`IT`, `it`],
+  [`Музыка`, `music`],
+  [`Кино`, `cinema`],
+  [`Программирование`, `coding`],
+  [`Железо`, `details`],
+]);
+
 module.exports = {
   DateCypher,
   DEFAULT_COMMAND,
@@ -42,6 +54,7 @@ module.exports = {
   MAX_ID_LENGTH,
   API_PREFIX,
   Env,
-  picsNames
+  picsNames,
+  categories
 };
 
