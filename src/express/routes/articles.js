@@ -31,7 +31,7 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
     title: body.title,
     announce: body.announce,
     fullText: body[`full-text`],
-    category: [`Разное`] // ???? надо исправить
+    category: [`Разное`] // ????? надо исправить
   };
 
   try {
@@ -43,8 +43,10 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
-articlesRouter.get(`/add`, (req, res) => res.render(`./admin/admin-add-new-post-empty`));
-articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
+articlesRouter.get(`/add`, async (req, res) => {
+  const allCategories = await api.getCategories(); // ?????? пока не используется
+  res.render(`./admin/admin-add-new-post-empty`, {allCategories});
+});
 
 articlesRouter.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;
@@ -53,6 +55,7 @@ articlesRouter.get(`/edit/:id`, async (req, res) => {
   res.render(`./admin/admin-add-new-post`, {article, categories}); // ?????? categories пока не используем как надо
 });
 
+articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
 articlesRouter.get(`/:id`, (req, res) => res.render(`./post/post-user`));
 
 module.exports = articlesRouter;

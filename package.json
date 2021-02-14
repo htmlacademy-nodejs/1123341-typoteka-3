@@ -9,7 +9,7 @@
     "eslint": "eslint --ext .js src/",
     "start": "cross-env NODE_ENV=production node ./src/service/service.js --server",
     "start::debug": "cross-env NODE_ENV=development LOG_LEVEL=debug node ./src/service/service.js --server",
-    "start-front-server": "node ./src/express/index.js"
+    "start-front-server": "nodemon --watch src/express --ext js,mjs,json,pug ./src/express/index.js"
   },
   "repository": {
     "type": "git",
