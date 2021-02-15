@@ -20,7 +20,6 @@ mainRouter.get(`/`, async (req, res) => {
 });
 
 mainRouter.get(`/search`, async (req, res) => {
-
   try {
     const {search} = req.query;
     const results = await api.search(search);
