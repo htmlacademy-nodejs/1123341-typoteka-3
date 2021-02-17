@@ -72,8 +72,8 @@ block content
         .search-page__wrapper
           h1 Поиск
           .search.search-page__form
-            form(action='#' method='get')
+            form(action='/search' method='get')
               label
-                input(type='text' placeholder='Что ищем?')
+                input(type='text' name='search' placeholder='Что ищем?')
               button.search__button.button.button--transparent(type='submit') Найти
     include ../partials/footer.pug

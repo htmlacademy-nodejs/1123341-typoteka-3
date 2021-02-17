@@ -10,6 +10,7 @@ const {HttpCode} = require(`../../constants`);
 const mockData = [
   {
     "id": `QlwMTH`,
+    "picture": `forest`,
     "title": `Борьба с прокрастинацией`,
     "announce": `Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике.`,
     "fullText": `Это один из лучших рок-музыкантов. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать`,
@@ -40,6 +41,7 @@ const mockData = [
   },
   {
     "id": `hvRfDJ`,
+    "picture": `skyscraper`,
     "title": `Как перестать беспокоиться и начать жить`,
     "announce": `Золотое сечение — соотношение двух величин, гармоническая пропорция.`,
     "fullText": `Золотое сечение — соотношение двух величин, гармоническая пропорция. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике.`,
@@ -63,6 +65,7 @@ const mockData = [
   },
   {
     "id": `Yo8wNn`,
+    "picture": `sea`,
     "title": `Самый лучший музыкальный альбом этого года`,
     "announce": `Он написал больше 30 хитов. Как начать действовать? Для начала просто соберитесь.`,
     "fullText": `Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Помните, небольшое количество ежедневных упражнений лучше, чем один раз, но много. Простые ежедневные упражнения помогут достичь успеха. Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике.`,
@@ -77,6 +80,7 @@ const mockData = [
   },
   {
     "id": `p8U4f6`,
+    "picture": `sea-fullsize`,
     "title": `Рок — это протест`,
     "announce": `Бороться с прокрастинацией несложно. Просто действуйте. Маленькими шагами. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле?   Этот смартфон — настоящая находка. Большой и яркий экран, мощнейший процессор — всё это в небольшом гаджете.`,
     "fullText": `Игры и программирование разные вещи. Не стоит идти в программисты, если вам нравятся только игры.`,
@@ -97,6 +101,7 @@ const mockData = [
   },
   {
     "id": `frgO_n`,
+    "picture": `sea`,
     "title": `Рок — это протест`,
     "announce": `Он написал больше 30 хитов. Альбом стал настоящим открытием года. Мощные гитарные рифы и скоростные соло-партии не дадут заскучать`,
     "fullText": `Это один из лучших рок-музыкантов.`,
@@ -152,6 +157,7 @@ describe(`API returns an article with given id`, () => {
 describe(`API creates an article if data is valid`, () => {
   const newArticle = {
     title: `Дам погладить котика`,
+    picture: `pig`,
     announce: `Иногда котики умываются после глажки`,
     fullText: `Это мой кот. Зовут Винки!`,
     createdDate: `2020-05-22 11:11:11`,
@@ -167,8 +173,6 @@ describe(`API creates an article if data is valid`, () => {
       .send(newArticle);
   });
 
-  console.log(response);
-
   test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
   test(`Returns article created`, () => expect(response.body).toEqual(expect.objectContaining(newArticle)));
   test(`Articles count is changed`, () => request(app)
@@ -180,6 +184,7 @@ describe(`API creates an article if data is valid`, () => {
 describe(`API refuses to create an article if data is invalid`, () => {
   const newArticle = {
     title: `Дам погладить котика`,
+    picture: `cat`,
     announce: `Иногда котики умываются после глажки`,
     fullText: `Это мой кот. Зовут Винки!`,
     createdDate: `2020-05-22 11:11:11`,
@@ -203,6 +208,7 @@ describe(`API refuses to create an article if data is invalid`, () => {
 describe(`API changes existent article`, () => {
   const newArticle = {
     title: `Дам погладить котика`,
+    picture: `wrestling`,
     announce: `Иногда котики умываются после глажки`,
     fullText: `Это мой кот. Зовут Винки!`,
     createdDate: `2020-05-22 11:11:11`,
@@ -229,6 +235,7 @@ test(`API returns status code 404 when trying to change non-existent article`, (
   const app = createAPI();
   const validArticle = {
     title: `Дам погладить котика`,
+    picture: `family`,
     announce: `Иногда котики умываются после глажки`,
     fullText: `Это мой кот. Зовут Винки!`,
     createdDate: `2020-05-22 11:11:11`,
@@ -245,6 +252,7 @@ test(`API returns status code 400 when trying to change an article with invalid 
   const app = createAPI();
   const invalidArticle = {
     title: `Дам погладить котика`,
+    picture: `family`,
     announce: `Иногда котики умываются после глажки`,
     fullText: `Это мой кот. Зовут Винки!`,
     createdDate: `2020-05-22 11:11:11`,

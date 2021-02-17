@@ -1,5 +1,7 @@
 'use strict';
 
+const dayjs = require(`dayjs`);
+
 module.exports.getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -13,4 +15,10 @@ module.exports.shuffle = (someArray) => {
   }
 
   return someArray;
+};
+
+module.exports.compareDate = (cardA, cardB) => {
+  const dateA = dayjs(cardA.createdDate);
+  const dateB = dayjs(cardB.createdDate);
+  return dateB.diff(dateA, `minute`);
 };

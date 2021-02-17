@@ -7,9 +7,12 @@ class CategoryService {
 
   find() {
     const categories = this._articles
-      .flatMap((article) => article.category);
+      .reduce((acc, article) => {
+        article.category.forEach((category) => acc.add(category));
+        return acc;
+      }, new Set());
 
-    return [...new Set(categories)];
+    return [...categories];
   }
 }
 

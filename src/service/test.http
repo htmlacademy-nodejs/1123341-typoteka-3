@@ -1,0 +1,22 @@
+# Список книг
+GET http://localhost:3000/api/books HTTP/1.1
+
+###
+
+# Просмотр информации о первой книге
+GET http://localhost:3000/api/articles/p8U4f6/comments HTTP/1.1
+
+###
+
+# Добавление новой книги
+POST http://localhost:3000/api/books HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "The Dead Zone",
+}
+
+###
+
+# Несуществующий маршрут
+DELETE http://localhost:3000/api/articles/frgO_n HTTP/1.1
