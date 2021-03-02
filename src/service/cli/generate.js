@@ -62,16 +62,15 @@ const generateAnnounce = (announces) => {
   return announce;
 };
 
-const generateOffers = (offerShape) => {
+const generateArticles = (articleShape, articlesCount) => {
   const {
     titles,
     announces,
     categories,
     comments,
-    countOffer
-  } = offerShape;
+  } = articleShape;
 
-  return Array(countOffer).fill({}).map(() => ({
+  return Array(articlesCount).fill({}).map(() => ({
     id: nanoid(MAX_ID_LENGTH),
     picture: getPictureFileName(picsNames),
     title: titles[getRandomInt(0, titles.length - 1)],
@@ -86,22 +85,22 @@ const generateOffers = (offerShape) => {
 module.exports = {
   name: `--generate`,
   async run(args) {
-    let offerShape = {};
+    let articleShape = {};
     const [count] = args;
-    offerShape.announces = await readContent(FILE_ANNOUNCES);
-    offerShape.titles = await readContent(FILE_TITLES);
-    offerShape.categories = await readContent(FILE_CATEGORIES);
-    offerShape.comments = await readContent(FILE_COMMENTS);
-    offerShape.countOffer = Number.parseInt(count, 10) ? Number.parseInt(count, 10) : DEFAULT_COUNT;
+    articleShape.announces = await readContent(FILE_ANNOUNCES);
+    articleShape.titles = await readContent(FILE_TITLES);
+    articleShape.categories = await readContent(FILE_CATEGORIES);
+    articleShape.comments = await readContent(FILE_COMMENTS);
+    let articlesCount = Number.parseInt(count, 10) ? Number.parseInt(count, 10) : DEFAULT_COUNT;
 
-    if (offerShape.countOffer >= 1000 || offerShape.countOffer < 0) {
-      offerShape.countOffer = DEFAULT_COUNT;
+    if (articlesCount >= 1000 || articlesCount < 0) {
+      articlesCount = DEFAULT_COUNT;
     }
 
-    const content = JSON.stringify(generateOffers(offerShape));
+    const content = JSON.stringify(generateArticles(articleShape, articlesCount));
 
     try {
-      await fs.writeFile(FILE_NAME, content);
+      await fs.writeFile(path.resolve(__dirname, `../../../${FILE_NAME}`), content);
       return console.info(chalk.green(`Operation success. File created.`));
 
     } catch (err) {

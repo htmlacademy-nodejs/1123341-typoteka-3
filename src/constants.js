@@ -45,6 +45,23 @@ const categories = new Map([
   [`Железо`, `details`],
 ]);
 
+const users = [
+  {
+    email: `ivanov@example.com`,
+    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf99`,
+    firstName: `Иван`,
+    lastName: `Иванов`,
+    avatar: `avatar1.jpg`
+  },
+  {
+    email: `petrov@example.com`,
+    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf99`,
+    firstName: `Пётр`,
+    lastName: `Петров`,
+    avatar: `avatar2.jpg`
+  }
+];
+
 module.exports = {
   DateCypher,
   DEFAULT_COMMAND,
@@ -55,6 +72,7 @@ module.exports = {
   API_PREFIX,
   Env,
   picsNames,
-  categories
+  categories,
+  users
 };
 
