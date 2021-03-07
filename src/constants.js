@@ -51,14 +51,35 @@ const users = [
     passwordHash: `5f4dcc3b5aa765d61d8327deb882cf99`,
     firstName: `Иван`,
     lastName: `Иванов`,
-    avatar: `avatar1.jpg`
+    avatar: `avatar-1.png`
+  },
+  {
+    email: `kazak@example.com`,
+    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf98`,
+    firstName: `Родион`,
+    lastName: `Молотов`,
+    avatar: `avatar-2.png`
+  },
+  {
+    email: `westlife@example.com`,
+    passwordHash: `5f4dcc3b5aa76d5d61d8327deb882cf99`,
+    firstName: `Лось`,
+    lastName: `Восточный`,
+    avatar: `avatar-3.png`
+  },
+  {
+    email: `cardan@example.com`,
+    passwordHash: `5f4dcc3bd5aa765d61d8327deb882cf99`,
+    firstName: `Майкл`,
+    lastName: `Джонсон`,
+    avatar: `avatar-4.png`
   },
   {
     email: `petrov@example.com`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf99`,
+    passwordHash: `5f4dcc3b5aa765d61d8327deb8d82cf99`,
     firstName: `Пётр`,
     lastName: `Петров`,
-    avatar: `avatar2.jpg`
+    avatar: `avatar-5.png`
   }
 ];
 

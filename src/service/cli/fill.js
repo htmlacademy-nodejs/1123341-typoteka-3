@@ -2,6 +2,7 @@
 
 const chalk = require(`chalk`);
 const path = require(`path`);
+const os = require(`os`);
 const fs = require(`fs`).promises;
 const {getRandomInt, shuffle} = require(`../../utils`);
 const {picsNames, users} = require(`../../constants`);
@@ -17,7 +18,7 @@ const FILE_COMMENTS = path.resolve(__dirname, `../../../data/comments.txt`);
 const readContent = async (filePath) => {
   try {
     const content = await fs.readFile(filePath, `utf8`);
-    return content.trim().split(`\r`).join().split(`,\n`);
+    return content.trim().split(os.EOL);
 
   } catch (err) {
     console.error(chalk.red(err));
@@ -84,7 +85,6 @@ module.exports = {
     articleShape.announces = await readContent(FILE_ANNOUNCES);
     articleShape.titles = await readContent(FILE_TITLES);
     articleShape.categories = await readContent(FILE_CATEGORIES);
-    console.log(articleShape.categories);
     articleShape.comments = await readContent(FILE_COMMENTS);
     let articlesCount = Number.parseInt(count, 10) ? Number.parseInt(count, 10) : DEFAULT_COUNT;
 
