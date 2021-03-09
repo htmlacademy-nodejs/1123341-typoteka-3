@@ -5,6 +5,7 @@ const fs = require(`fs`).promises;
 const {HttpCode, API_PREFIX} = require(`../../constants`);
 const routes = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
+const sequelize = require(`../lib/sequelize`);
 
 const DEFAULT_PORT = 3000;
 const FILENAME = `mocks.json`;
@@ -48,7 +49,17 @@ app.use((err, _req, _res, _next) => {
 
 module.exports = {
   name: `--server`,
-  run(args) {
+  async run(args) {
+    try {
+      logger.info(`Устанавливаем соединение с БД...`);
+      await sequelize.authenticate();
+
+    } catch (err) {
+      logger.error(`Ошибка при попытке установить соединение с БД: ${err.message}`);
+      process.exit(1);
+    }
+    logger.info(`Соединение с БД установлено`);
+
     const [customPort] = args;
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
 
