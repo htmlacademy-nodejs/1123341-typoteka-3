@@ -83,6 +83,13 @@ const users = [
   }
 ];
 
+const Alias = {
+  COMMENTS: `comments`,
+  ARTICLES: `articles`,
+  CATEGORIES: `categories`,
+  ARTICLES_CATEGORIES: `articlesCategories`
+};
+
 module.exports = {
   DateCypher,
   DEFAULT_COMMAND,
@@ -94,6 +101,7 @@ module.exports = {
   Env,
   picsNames,
   categories,
-  users
+  users,
+  Alias
 };
 
