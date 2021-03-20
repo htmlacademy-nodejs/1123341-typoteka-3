@@ -22,3 +22,8 @@ module.exports.compareDate = (cardA, cardB) => {
   const dateB = dayjs(cardB.createdDate);
   return dateB.diff(dateA, `minute`);
 };
+
+// const generateDate = () => {
+//   const milliseconds = getRandomInt(DateCypher.MIN, DateCypher.MAX);
+//   return new Date(milliseconds);
+// };

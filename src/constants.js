@@ -83,7 +83,7 @@ const users = [
   }
 ];
 
-const Alias = {
+const Aliase = {
   COMMENTS: `comments`,
   ARTICLES: `articles`,
   CATEGORIES: `categories`,
@@ -102,6 +102,6 @@ module.exports = {
   picsNames,
   categories,
   users,
-  Alias
+  Aliase
 };
 

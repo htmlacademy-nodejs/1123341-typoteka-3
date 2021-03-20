@@ -1,27 +1,22 @@
 'use strict';
 
-const dayjs = require(`dayjs`);
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const path = require(`path`);
 const {getRandomInt, shuffle} = require(`../../utils`);
-const {DateCypher, MAX_ID_LENGTH, picsNames} = require(`../../constants`);
-const {nanoid} = require(`nanoid`);
+const {getLogger} = require(`../lib/logger`);
+const {picsNames} = require(`../../constants`);
+const sequelize = require(`../lib/sequelize`);
+const initDatabase = require(`../lib/init-db`);
 
 const FILE_ANNOUNCES = path.resolve(__dirname, `../../../data/announces.txt`);
 const FILE_TITLES = path.resolve(__dirname, `../../../data/titles.txt`);
 const FILE_CATEGORIES = path.resolve(__dirname, `../../../data/categories.txt`);
 const FILE_COMMENTS = path.resolve(__dirname, `../../../data/comments.txt`);
-const DEFAULT_COUNT = 1;
+const DEFAULT_COUNT = 10;
 const MAX_COMMENTS = 6;
-const FILE_NAME = `mocks.json`;
 
-const generateDate = () => {
-  const milliseconds = getRandomInt(DateCypher.MIN, DateCypher.MAX);
-  return new Date(milliseconds);
-};
-
-const getPictureFileName = (names) => names[getRandomInt(0, names.length - 1)];
+const logger = getLogger({});
 
 const readContent = async (filePath) => {
   try {
@@ -29,29 +24,31 @@ const readContent = async (filePath) => {
     return content.trim().split(`\n`);
 
   } catch (err) {
-    console.error(chalk.red(err));
+    logger.error(chalk.red(`Error when reading file: ${err.message}`));
     return [];
   }
-};
-
-const generateCategories = (categories) => {
-  const words = new Set();
-  Array(getRandomInt(1, categories.length)).fill(``)
-    .map(() => words.add(categories[getRandomInt(0, categories.length - 1)]));
-
-  return [...words];
 };
 
 const generateComments = (count, comments) => (
   Array(count)
     .fill({})
     .map(() => ({
-      id: nanoid(MAX_ID_LENGTH),
-      text: shuffle(comments) // перетасовываем массив цитат
-        .slice(0, getRandomInt(1, 3)) // подбираем количество цитат
-        .join(` `), // соединяем в одну строку
+      text: shuffle(comments)
+        .slice(0, getRandomInt(1, 3))
+        .join(` `),
     }))
 );
+
+const generateCategories = (categories) => {
+  const words = new Set();
+  Array(getRandomInt(1, categories.length))
+    .fill(``)
+    .map(() => words.add(categories[getRandomInt(0, categories.length - 1)]));
+
+  return [...words];
+};
+
+const getPictureFileName = (names) => names[getRandomInt(0, names.length - 1)];
 
 const generateAnnounce = (announces) => {
   const sentences = new Set();
@@ -62,50 +59,52 @@ const generateAnnounce = (announces) => {
   return announce;
 };
 
-const generateArticles = (articleShape, articlesCount) => {
+const generateArticles = (fullMockData, articlesCount) => {
   const {
     titles,
     announces,
     categories,
     comments,
-  } = articleShape;
+  } = fullMockData;
 
   return Array(articlesCount).fill({}).map(() => ({
-    id: nanoid(MAX_ID_LENGTH),
     picture: getPictureFileName(picsNames),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: generateAnnounce(announces),
     fullText: generateAnnounce(announces),
-    createdDate: dayjs(generateDate()).format(`YYYY-MM-DD HH:mm:ss`),
-    category: generateCategories(categories),
+    categories: generateCategories(categories),
     comments: generateComments(getRandomInt(1, MAX_COMMENTS), comments)
   }));
 };
 
 module.exports = {
-  name: `--generate`,
+  name: `--filldb`,
   async run(args) {
-    let articleShape = {};
+    try {
+      logger.info(`Trying to connect to database...`);
+      await sequelize.authenticate();
+
+    } catch (err) {
+      logger.error(`An error occured: ${err.message}`);
+      process.exit(1);
+    }
+    logger.info(`Connection to database established`);
+
+    let fullMockData = {};
     const [count] = args;
-    articleShape.announces = await readContent(FILE_ANNOUNCES);
-    articleShape.titles = await readContent(FILE_TITLES);
-    articleShape.categories = await readContent(FILE_CATEGORIES);
-    articleShape.comments = await readContent(FILE_COMMENTS);
+
+    fullMockData.announces = await readContent(FILE_ANNOUNCES);
+    fullMockData.titles = await readContent(FILE_TITLES);
+    fullMockData.categories = await readContent(FILE_CATEGORIES);
+    fullMockData.comments = await readContent(FILE_COMMENTS);
     let articlesCount = Number.parseInt(count, 10) ? Number.parseInt(count, 10) : DEFAULT_COUNT;
 
     if (articlesCount >= 1000 || articlesCount < 0) {
       articlesCount = DEFAULT_COUNT;
     }
 
-    const content = JSON.stringify(generateArticles(articleShape, articlesCount));
+    const articles = generateArticles(fullMockData, articlesCount);
 
-    try {
-      await fs.writeFile(path.resolve(__dirname, `../../../${FILE_NAME}`), content);
-      return console.info(chalk.green(`Operation success. File created.`));
-
-    } catch (err) {
-      return console.error(chalk.red(`Can't write data to file...`));
-    }
+    return initDatabase(sequelize, articles, fullMockData);
   }
 };
-
