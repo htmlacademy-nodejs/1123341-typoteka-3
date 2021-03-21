@@ -3,8 +3,8 @@
 const express = require(`express`);
 const request = require(`supertest`);
 const articles = require(`./articles-controller`);
-const DataService = require(`../data-service/articles-class`);
-const CommentService = require(`../data-service/comments-class`);
+const DataService = require(`../data-service/articles`);
+const CommentService = require(`../data-service/comments`);
 const {HttpCode} = require(`../../constants`);
 
 const mockData = [
