@@ -6,11 +6,15 @@ class CommentService {
     this._Comment = sequelize.models.Comment;
   }
 
-  create(articleId, comment) {
-    return this._Comment.create({
-      articleId,
-      ...comment
-    });
+  // ?????? Мне кажется, не совсем корректный код внутри
+  async create(articleId, comment) {
+    const postComment = await this._Comment
+      .create({
+        articleId,
+        ...comment
+      });
+
+    return postComment;
   }
 
   async drop(id) {
@@ -21,11 +25,14 @@ class CommentService {
     return !!deletedRows;
   }
 
-  findAll(articleId) {
-    return this._Comment.findAll({
-      where: {articleId},
-      raw: true
-    });
+  async findAll(articleId) {
+    const comments = await this._Comment
+      .findAll({
+        where: {articleId},
+        raw: true
+      });
+
+    return comments;
   }
 }
 
