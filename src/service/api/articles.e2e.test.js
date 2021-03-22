@@ -160,8 +160,8 @@ describe(`API creates an article if data is valid`, () => {
     picture: `pig`,
     announce: `Иногда котики умываются после глажки`,
     fullText: `Это мой кот. Зовут Винки!`,
-    createdDate: `2020-05-22 11:11:11`,
-    category: [`Котики`],
+    createdDate: `2020-05-22 11:11:11`, // ??????
+    category: [`Котики`], // ??????
   };
 
   const app = createAPI();
