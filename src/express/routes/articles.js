@@ -1,5 +1,6 @@
 'use strict';
 
+const dayjs = require(`dayjs`);
 const {Router} = require(`express`);
 const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
@@ -56,10 +57,14 @@ articlesRouter.get(`/edit/:id`, async (req, res) => {
   res.render(`./admin/admin-add-new-post`, {article, categories}); // ?????? categories пока не используем как надо
 });
 
-articlesRouter.get(`/:id`, async (req, res) => { // ?????? categories пока не используем как надо
+articlesRouter.get(`/:id`, async (req, res) => {
   const {id} = req.params;
-  const article = await api.getArticle(id, true);
-  res.render(`./post/post-user`, {article});
+  const [article, allNotes] = await Promise.all([
+    api.getArticle(id, true),
+    api.getArticles()
+  ]);
+
+  res.render(`./post/post-user`, {article, allNotes, dayjs});
 });
 
 module.exports = articlesRouter;

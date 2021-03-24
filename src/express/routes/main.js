@@ -12,7 +12,7 @@ mainRouter.get(`/`, async (req, res) => {
 
   const categoriesCapacity = categories
     .map((category) => articles
-      .filter((article) => article.category
+      .filter((article) => article.category // ?????? categories
         .includes(category)).length
     );
 
