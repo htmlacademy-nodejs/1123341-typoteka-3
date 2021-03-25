@@ -10,18 +10,16 @@ head
   link(rel='stylesheet' href='/css/style.min.css')
 body
   -
-    const dayjs = require(`dayjs`);
-
-    const formatDate = (dateString = ``, format = `simpleFormat`) => {
+    const formatDate = (generateDate, dateString = ``, format = `simpleFormat`) => {
       const date = dateString ? new Date(dateString) : new Date();
 
       switch (format) {
         case `tagFormat`:
-          return dayjs(date).format(`YYYY-MM-DDTHH:mm`);
+          return generateDate(date).format(`YYYY-MM-DDTHH:mm`);
         case `visualFormat`:
-          return dayjs(date).format(`DD.MM.YYYY, HH:mm`);
+          return generateDate(date).format(`DD.MM.YYYY, HH:mm`);
         default:
-          return dayjs(date).format(`DD.MM.YYYY`);
+          return generateDate(date).format(`DD.MM.YYYY`);
       }
     };
 
