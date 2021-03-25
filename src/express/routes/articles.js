@@ -44,8 +44,9 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
 articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
 
 articlesRouter.get(`/add`, async (req, res) => {
-  const allCategories = await api.getCategories(); // ?????? пока не используется
-  res.render(`./admin/admin-add-new-post-empty`, {allCategories});
+  const categories = await api.getCategories();
+  // ???????? попадают ли сюда categories
+  res.render(`./admin/admin-add-new-post-empty`, {categories, dayjs});
 });
 
 articlesRouter.get(`/edit/:id`, async (req, res) => {
@@ -54,7 +55,8 @@ articlesRouter.get(`/edit/:id`, async (req, res) => {
     api.getArticle(id),
     api.getCategories()
   ]);
-  res.render(`./admin/admin-add-new-post`, {article, categories}); // ?????? categories пока не используем как надо
+  // ???????? манипуляции с categories непонятны
+  res.render(`./admin/admin-add-new-post`, {article, categories, dayjs});
 });
 
 articlesRouter.get(`/:id`, async (req, res) => {

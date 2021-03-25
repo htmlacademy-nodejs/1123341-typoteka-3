@@ -10,27 +10,21 @@ mainRouter.get(`/`, async (req, res) => {
     api.getCategories()
   ]);
 
-  const categoriesCapacity = categories
-    .map((category) => articles
-      .filter((article) => article.category // ?????? categories
-        .includes(category)).length
-    );
-
-  res.render(`./main/main`, {articles, categories, categoriesCapacity});
+  res.render(`./main/main`, {articles, categories});
 });
 
 mainRouter.get(`/search`, async (req, res) => {
   try {
     const {search} = req.query;
-    const results = await api.search(search);
+    const articals = await api.search(search);
     res.render(`search/search-2`, {
-      results,
+      articals,
       searchText: search
     });
 
   } catch (error) {
     res.render(`search/search-2`, {
-      results: []
+      articals: []
     });
   }
 });

@@ -17,7 +17,7 @@ block content
         ul.notes__list
           each article in articles
             li.notes__list-item
-                time.notes__item-time(datetime=article.createdDate) #{article.createdDate}
+                time.notes__item-time(datetime=`${formatDate(article.createdAt, `tagFormat`)}`) #{formatDate(article.createdAt, `visualFormat`)}
                 a.notes__item-text(href='#') #{article.fullText}
                 button.notes__button.button.button--close-item(type='button')
                   span.visually-hidden Закрыть строку списка

@@ -9,6 +9,22 @@ head
   link(rel='preload' href='/fonts/SFProDisplay-Regular.woff2' as='font' crossorigin='anonymous')
   link(rel='stylesheet' href='/css/style.min.css')
 body
+  -
+    const dayjs = require(`dayjs`);
+
+    const formatDate = (dateString = ``, format = `simpleFormat`) => {
+      const date = dateString ? new Date(dateString) : new Date();
+
+      switch (format) {
+        case `tagFormat`:
+          return dayjs(date).format(`YYYY-MM-DDTHH:mm`);
+        case `visualFormat`:
+          return dayjs(date).format(`DD.MM.YYYY, HH:mm`);
+        default:
+          return dayjs(date).format(`DD.MM.YYYY`);
+      }
+    };
+
   block content
   script(src='/js/vendor.js')
   script(src='/js/main.js')

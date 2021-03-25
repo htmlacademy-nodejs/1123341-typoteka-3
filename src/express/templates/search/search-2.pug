@@ -20,7 +20,7 @@ block content
               label
                 input(type='text' name='search' placeholder='Что ищем?' value=searchText)
               button.search__button.button.button--transparent(type='submit') Найти
-            each article in results
+            each article in articals
               .search__result
                 time.search__date(datetime=article.createdDate) #{article.createdDate}
                 a.search__link

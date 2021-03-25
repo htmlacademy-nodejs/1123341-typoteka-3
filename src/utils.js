@@ -18,8 +18,8 @@ module.exports.shuffle = (someArray) => {
 };
 
 module.exports.compareDate = (cardA, cardB) => {
-  const dateA = dayjs(cardA.createdDate);
-  const dateB = dayjs(cardB.createdDate);
+  const dateA = dayjs(new Date(cardA.createdAt));
+  const dateB = dayjs(new Date(cardB.createdAt));
   return dateB.diff(dateA, `minute`);
 };
 
