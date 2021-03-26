@@ -15,15 +15,14 @@ block content
       section.main-page__publication.publication
         h1.publication__title Комментарии
         ul.publication__list
-          each article in articles
-            each comment in article.comments
-              li.publication__list-item
-                .publication__header
-                  img.publication__list-image(src='/img/avatar-small-2.png' width='20' height='20' alt='Аватар пользователя')
-                  b.publication__list-name Александр Петров
-                  time.publication__item-time(datetime=`${formatDate(dayjs, comment.createdAt, `tagFormat`)}`) #{formatDate(dayjs, comment.createdAt, `visualFormat`)}
-                a.publication__item-text(href='#') #{comment.text}
-                p.publication__text-strong #{comment.text}
-                button.publication__button.button.button--close-item(type='button')
-                  span.visually-hidden Закрыть строку списка
+          each comment in sortedComments
+            li.publication__list-item
+              .publication__header
+                img.publication__list-image(src='/img/avatar-small-2.png' width='20' height='20' alt='Аватар пользователя')
+                b.publication__list-name Александр Петров
+                time.publication__item-time(datetime=`${formatDate(dayjs, comment.createdAt, `tagFormat`)}`) #{formatDate(dayjs, comment.createdAt, `visualFormat`)}
+              a.publication__item-text(href='#') #{comment.text}
+              p.publication__text-strong #{comment.text}
+              button.publication__button.button.button--close-item(type='button')
+                span.visually-hidden Закрыть строку списка
     include ../partials/footer.pug

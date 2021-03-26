@@ -22,7 +22,7 @@ class API {
     return this._load(`/articles`, {params: {comments}});
   }
 
-  getArticle(id, comments) {
+  getArticle({id, comments} = {}) {
     return this._load(`/articles/${id}`, {params: {comments}});
   }
 
@@ -30,7 +30,7 @@ class API {
     return this._load(`/search`, {params: {query}});
   }
 
-  getCategories(sumUpEquals) {
+  getCategories({sumUpEquals} = {}) {
     return this._load(`/categories`, {params: {sumUpEquals}});
   }
 
