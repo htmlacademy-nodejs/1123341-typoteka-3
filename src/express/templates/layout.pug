@@ -10,16 +10,16 @@ head
   link(rel='stylesheet' href='/css/style.min.css')
 body
   -
-    const formatDate = (generateDate, dateString = ``, format = `simpleFormat`) => {
+    const formatDate = (generator, dateString = ``, format = `simpleFormat`) => {
       const date = dateString ? new Date(dateString) : new Date();
 
       switch (format) {
         case `tagFormat`:
-          return generateDate(date).format(`YYYY-MM-DDTHH:mm`);
+          return generator(date).format(`YYYY-MM-DDTHH:mm`);
         case `visualFormat`:
-          return generateDate(date).format(`DD.MM.YYYY, HH:mm`);
+          return generator(date).format(`DD.MM.YYYY, HH:mm`);
         default:
-          return generateDate(date).format(`DD.MM.YYYY`);
+          return generator(date).format(`DD.MM.YYYY`);
       }
     };
 

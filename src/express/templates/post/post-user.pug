@@ -2,11 +2,8 @@ extends ../layout.pug
 
 block content
   -
-    const capacities = article.categories
-      .map((category) => allNotes
-        .filter((note) => note.category
-          .includes(category)).length
-      );
+    const filteredCategories = categories
+      .filter((category) => article.categories.includes(category));
 
   .wrapper
     header.header
@@ -33,11 +30,11 @@ block content
               time.post__date(datetime=`${formatDate(dayjs, article.createdAt, `tagFormat`)}`) #{formatDate(dayjs, article.createdAt, `visualFormat`)}
               h2.post__title.title.title--main AirPods в один клик
               ul.post__themes.themes
-                each category, index in article.categories
+                each category in filteredCategories
                   li.themes__item
                     a.themes__item-link(href='#')
                       | #{category.name}
-                      sup #{capacities[index]}
+                      sup #{category.sumOfEquals}
                     button.themes__remove-btn(type='button') Удалить категорию
             .post__picture
               img(src=`img/${article.picture}@1x.jpg` alt=article.title)
@@ -58,7 +55,7 @@ block content
                   .comments__text
                     .comments__head
                       p Евгений Петров •
-                      time.comments__date(datetime=`${formatDate(comment.createdAt, `tagFormat`)}`) #{formatDate(comment.createdAt, `visualFormat`)}
+                      time.comments__date(datetime=`${formatDate(dayjs, comment.createdAt, `tagFormat`)}`) #{formatDate(dayjs, comment.createdAt, `visualFormat`)}
                     p.comments__message #{comment.text}
             .comments__footer.comments__footer--user
               form(action='#' method='POST')

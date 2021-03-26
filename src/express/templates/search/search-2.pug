@@ -22,7 +22,7 @@ block content
               button.search__button.button.button--transparent(type='submit') Найти
             each article in articals
               .search__result
-                time.search__date(datetime=article.createdDate) #{article.createdDate}
+                time.search__date(datetime=formatDate(dayjs, article.createdAt, `tagFormat`)) #{formatDate(dayjs, article.createdAt, `visualFormat`)}
                 a.search__link
                   | #{article.title}
     include ../partials/footer.pug

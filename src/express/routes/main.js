@@ -1,5 +1,6 @@
 'use strict';
 
+const dayjs = require(`dayjs`);
 const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
@@ -19,12 +20,14 @@ mainRouter.get(`/search`, async (req, res) => {
     const articals = await api.search(search);
     res.render(`search/search-2`, {
       articals,
-      searchText: search
+      searchText: search,
+      dayjs
     });
 
   } catch (error) {
     res.render(`search/search-2`, {
-      articals: []
+      articals: [],
+      dayjs
     });
   }
 });
