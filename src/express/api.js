@@ -30,8 +30,8 @@ class API {
     return this._load(`/search`, {params: {query}});
   }
 
-  getCategories(count) {
-    return this._load(`/categories`, {params: {count}});
+  getCategories(sumUpEquals) {
+    return this._load(`/categories`, {params: {sumUpEquals}});
   }
 
   createArticle(data) {
