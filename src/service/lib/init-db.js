@@ -3,12 +3,12 @@
 const defineModels = require(`../models`);
 const {Aliase} = require(`../../constants`);
 
-module.exports = async (sequelize, articles, fullMockData) => {
+module.exports = async (sequelize, articles, categories) => {
   const {Category, Article} = defineModels(sequelize);
   await sequelize.sync({force: true});
 
   const categoriesTable = await Category.bulkCreate(
-      fullMockData.categories.map((item) => ({name: item}))
+      categories.map((item) => ({name: item}))
   );
 
   const categoryIdByName = categoriesTable.reduce((acc, next) => ({

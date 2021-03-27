@@ -3,7 +3,7 @@
 const Sequelize = require(`sequelize`);
 const Aliase = require(`../../constants`);
 
-class CategoryService {
+class CategoriesService {
   constructor(sequelize) {
     this._Category = sequelize.models.Category;
     this._ArticleCategory = sequelize.models.ArticleCategory;
@@ -37,5 +37,5 @@ class CategoryService {
   }
 }
 
-module.exports = CategoryService;
+module.exports = CategoriesService;
 
