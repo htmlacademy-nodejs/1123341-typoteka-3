@@ -5,7 +5,7 @@ const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 const initDB = require(`../lib/init-db`);
 const searchRoutes = require(`./search-routes`);
-const SearchService = require(`../data-service/search`);
+const SearchService = require(`../data-service/search-service`);
 const {HttpCode} = require(`../../constants`);
 
 const mockCategories = [

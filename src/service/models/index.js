@@ -1,9 +1,9 @@
 "use strict";
 
-const defineCategory = require(`./category`);
-const defineComment = require(`./comment`);
-const defineArticle = require(`./article`);
-const defineArticleCategory = require(`./article-category`);
+const defineCategory = require(`./category-model`);
+const defineComment = require(`./comment-model`);
+const defineArticle = require(`./article-model`);
+const defineArticleCategory = require(`./article-category-model`);
 const {Aliase} = require(`../../constants`);
 
 const define = (sequelize) => {
