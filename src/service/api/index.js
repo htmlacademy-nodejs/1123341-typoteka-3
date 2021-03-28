@@ -1,5 +1,5 @@
 'use strict';
-
+// ?????? исправить модуль
 const {Router} = require(`express`);
 
 const articles = require(`../api/articles-routes`);
@@ -21,7 +21,7 @@ const app = new Router();
   const mockData = await getMockData();
 
   categories(app, new CategoriesService(mockData));
-  articles(app, new ArticlesService(mockData), new CommentsService());
+  articles(app, new ArticlesService(mockData), new CommentsService(mockData));
   search(app, new SearchService(mockData));
 })();
 

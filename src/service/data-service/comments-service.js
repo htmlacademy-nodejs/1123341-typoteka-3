@@ -6,23 +6,29 @@ class CommentService {
     this._Comment = sequelize.models.Comment;
   }
 
-  // ?????? Мне кажется, не совсем корректный код внутри
   async create(articleId, comment) {
-    const postComment = await this._Comment
-      .create({
-        articleId,
-        ...comment
-      });
+    let postComment;
+
+    try {
+      postComment = await this._Comment
+        .create({
+          articleId,
+          ...comment
+        });
+
+    } catch (err) {
+      console.log(err);
+    }
 
     return postComment;
   }
 
   async drop(id) {
-    const deletedRows = await this._Comment.destroy({
+    const changedComments = await this._Comment.destroy({
       where: {id}
     });
 
-    return !!deletedRows;
+    return !!changedComments;
   }
 
   async findAll(articleId) {

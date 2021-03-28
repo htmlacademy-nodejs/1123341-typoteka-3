@@ -1,6 +1,6 @@
 'use strict';
 
-const Aliase = require(`../../constants`);
+const {Aliase} = require(`../../constants`);
 
 class ArticleService {
   constructor(sequelize) {

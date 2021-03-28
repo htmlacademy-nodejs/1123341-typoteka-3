@@ -8,7 +8,6 @@ const categoriesRoutes = require(`./categories-routes`);
 const CategoriesService = require(`../data-service/categories-service`);
 const {HttpCode} = require(`../../constants`);
 
-
 const mockCategories = [
   `Программирование`,
   `Разное`,

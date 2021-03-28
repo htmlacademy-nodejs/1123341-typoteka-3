@@ -12,7 +12,7 @@ module.exports = (app, articlesService, commentService) => {
 
   route.get(`/`, async (req, res) => {
     const {comments} = req.query;
-    const articles = articlesService.findAll(comments);
+    const articles = await articlesService.findAll(comments);
     res
       .status(HttpCode.OK)
       .json(articles);
@@ -74,9 +74,8 @@ module.exports = (app, articlesService, commentService) => {
   });
 
   route.get(`/:articleId/comments`, articleExistence(articlesService), async (req, res) => {
-    const {articleId} = res.locals;
+    const {articleId} = req.params;
     const comments = await commentService.findAll(articleId);
-
     res
       .status(HttpCode.OK)
       .json(comments);
@@ -97,10 +96,9 @@ module.exports = (app, articlesService, commentService) => {
     }
   });
 
-  // ?????? Мне кажется, не совсем корректный код внутри
   route.post(`/:articleId/comments`, [articleExistence(articlesService), commentValidator], async (req, res) => {
-    const {article} = res.locals;
-    const comment = await commentService.create(article, req.body);
+    const {articleId} = req.params;
+    const comment = await commentService.create(articleId, req.body);
 
     res
       .status(HttpCode.CREATED)
