@@ -15,7 +15,7 @@ module.exports = {
 
       --version:            выводит номер версии
       --help:               печатает этот текст
-      --generate <count>    формирует файл mocks.json
+      --filldb <count>      создание таблиц и заполнение моковыми данными
     `;
 
     console.log(chalk.gray(text));

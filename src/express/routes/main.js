@@ -1,5 +1,6 @@
 'use strict';
 
+const dayjs = require(`dayjs`);
 const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
@@ -7,30 +8,26 @@ const api = require(`../api`).getAPI();
 mainRouter.get(`/`, async (req, res) => {
   const [articles, categories] = await Promise.all([
     api.getArticles(),
-    api.getCategories()
+    api.getCategories({sumUpEquals: true})
   ]);
 
-  const categoriesCapacity = categories
-    .map((category) => articles
-      .filter((article) => article.category
-        .includes(category)).length
-    );
-
-  res.render(`./main/main`, {articles, categories, categoriesCapacity});
+  res.render(`./main/main`, {articles, categories});
 });
 
 mainRouter.get(`/search`, async (req, res) => {
   try {
     const {search} = req.query;
-    const results = await api.search(search);
+    const articals = await api.search(search);
     res.render(`search/search-2`, {
-      results,
-      searchText: search
+      articals,
+      searchText: search,
+      dayjs
     });
 
   } catch (error) {
     res.render(`search/search-2`, {
-      results: []
+      articals: [],
+      dayjs
     });
   }
 });

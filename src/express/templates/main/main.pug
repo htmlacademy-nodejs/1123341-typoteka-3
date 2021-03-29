@@ -22,11 +22,11 @@ block content
       section.main-page__theme-list
         h2.visually-hidden Список тем
         ul.themes
-          each category, index in categories
+          each category in categories
             li.themes__item
               a.themes__item-link(href='#')
-                | #{category} 
-                sup #{categoriesCapacity[index]}
+                | #{category.name}
+                sup #{category.sumOfEquals}
       .main-page__section-flex
         section.main-page__hot.hot
           h2.hot__name
@@ -74,7 +74,7 @@ block content
           each article in articles
             li.preview__item
               ul.preview__breadcrumbs
-                each category in article.category
+                each category in article.categories
                   li.preview__breadcrumbs-item
                     a.preview__breadcrumbs-link(href='#') #{category}
               .preview__background

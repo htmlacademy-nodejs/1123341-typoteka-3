@@ -1,11 +1,10 @@
 'use strict';
 
+const dayjs = require(`dayjs`);
 const {Router} = require(`express`);
 const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
-const dayjs = require(`dayjs`);
 const path = require(`path`);
-const {categories} = require(`../../constants`);
 
 const UPLOAD_DIR = path.resolve(__dirname, `../upload/img/`);
 
@@ -27,11 +26,10 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   const {body, file} = req;
   const articleData = {
     picture: file.filename,
-    createdDate: body[`public-date`],
     title: body.title,
     announce: body.announce,
     fullText: body[`full-text`],
-    category: [`Разное`] // ????? надо исправить
+    categories: body.category
   };
 
   try {
@@ -43,19 +41,32 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
+articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
+
 articlesRouter.get(`/add`, async (req, res) => {
-  const allCategories = await api.getCategories(); // ?????? пока не используется
-  res.render(`./admin/admin-add-new-post-empty`, {allCategories});
+  const categories = await api.getCategories();
+  // ???????? попадают ли сюда categories
+  res.render(`./admin/admin-add-new-post-empty`, {categories, dayjs});
 });
 
 articlesRouter.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;
-  const article = await api.getArticle(id);
-  article.createdDate = dayjs(article.createdDate).format(`DD.MM.YYYY`);
-  res.render(`./admin/admin-add-new-post`, {article, categories}); // ?????? categories пока не используем как надо
+  const [article, categories] = await Promise.all([
+    api.getArticle({id}),
+    api.getCategories()
+  ]);
+  // ???????? манипуляции с categories непонятны
+  res.render(`./admin/admin-add-new-post`, {article, categories, dayjs});
 });
 
-articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
-articlesRouter.get(`/:id`, (req, res) => res.render(`./post/post-user`));
+articlesRouter.get(`/:id`, async (req, res) => {
+  const {id} = req.params;
+  const [article, categories] = await Promise.all([
+    api.getArticle({id, comments: true}),
+    api.getCategories({sumUpEquals: true})
+  ]);
+
+  res.render(`./post/post-user`, {article, categories, dayjs});
+});
 
 module.exports = articlesRouter;

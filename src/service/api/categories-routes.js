@@ -8,9 +8,11 @@ module.exports = (app, service) => {
   app.use(`/categories`, route);
 
   route.get(`/`, async (req, res) => {
-    const categories = await service.find();
+    const {sumUpEquals} = req.query;
+    const categories = await service.findAll(sumUpEquals);
 
-    res.status(HttpCode.OK)
+    res
+      .status(HttpCode.OK)
       .json(categories);
   });
 };
