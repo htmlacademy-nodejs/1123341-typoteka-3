@@ -41,14 +41,14 @@ class ArticleService {
     return article;
   }
 
-  async findPage({limit, offset}) {
+  async findPage(limit, offset) {
     const {count, rows} = await this._Article.findAndCountAll({
       limit,
       offset,
       include: [Aliase.CATEGORIES],
       distinct: true
     });
-    return {count, articles: rows};
+    return {allArticlesSum: count, articlesOfPage: rows};
   }
 
   async update(id, article) {
