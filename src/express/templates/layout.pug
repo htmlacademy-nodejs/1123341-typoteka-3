@@ -8,6 +8,10 @@ head
   link(rel='preload' href='/fonts/Inter-Medium.woff2' as='font' crossorigin='anonymous')
   link(rel='preload' href='/fonts/SFProDisplay-Regular.woff2' as='font' crossorigin='anonymous')
   link(rel='stylesheet' href='/css/style.min.css')
+  style.
+    li.pagination__item--active{
+      pointer-events: none;
+    }
 body
   -
     const formatDate = (generator, dateString = ``, format = `simpleFormat`) => {
@@ -23,7 +27,7 @@ body
       }
     };
 
-  mixin pagination(page, totalPages, 2, `?`)
+  mixin pagination(page, totalPages, width, prefix)
     -
       let currentPage = page < 1
         ? 1

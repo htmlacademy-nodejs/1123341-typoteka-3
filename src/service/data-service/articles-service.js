@@ -45,7 +45,7 @@ class ArticleService {
     const {count, rows} = await this._Article.findAndCountAll({
       limit,
       offset,
-      include: [Aliase.CATEGORIES],
+      include: [Aliase.CATEGORIES, Aliase.COMMENTS],
       distinct: true
     });
     return {allArticlesSum: count, articlesOfPage: rows};

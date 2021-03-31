@@ -14,7 +14,7 @@ mainRouter.get(`/`, async (req, res) => {
   const offset = (page - 1) * ARTICLES_PER_PAGE;
 
   const [{allArticlesSum, articlesOfPage}, categories] = await Promise.all([
-    api.getArticles({limit, offset}),
+    api.getArticles({limit, offset, comments: true}),
     api.getCategories({sumUpEquals: true})
   ]);
 
