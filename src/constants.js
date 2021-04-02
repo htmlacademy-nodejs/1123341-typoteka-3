@@ -90,6 +90,8 @@ const Aliase = {
   ARTICLES_CATEGORIES: `articlesCategories`
 };
 
+const ARTICLES_PER_PAGE = 8;
+
 module.exports = {
   DateCypher,
   DEFAULT_COMMAND,
@@ -102,6 +104,7 @@ module.exports = {
   picsNames,
   categories,
   users,
-  Aliase
+  Aliase,
+  ARTICLES_PER_PAGE
 };
 

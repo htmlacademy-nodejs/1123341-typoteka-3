@@ -8,6 +8,10 @@ head
   link(rel='preload' href='/fonts/Inter-Medium.woff2' as='font' crossorigin='anonymous')
   link(rel='preload' href='/fonts/SFProDisplay-Regular.woff2' as='font' crossorigin='anonymous')
   link(rel='stylesheet' href='/css/style.min.css')
+  style.
+    li.pagination__item--active{
+      pointer-events: none;
+    }
 body
   -
     const formatDate = (generator, dateString = ``, format = `simpleFormat`) => {
@@ -22,6 +26,36 @@ body
           return generator(date).format(`DD.MM.YYYY`);
       }
     };
+
+  mixin pagination(page, totalPages, width, prefix)
+    -
+      let currentPage = page < 1
+        ? 1
+        : page;
+      
+      currentPage = page > totalPages
+        ? totalPages
+        : page;
+      
+      let start = currentPage - width <= 0
+        ? 1
+        : currentPage - width;
+
+      let end = currentPage + width > totalPages
+        ? totalPages
+        : currentPage + width;
+
+    .preview__toggle-wrapper
+      ul.preview__pagination.pagination
+        if start > 1
+          li
+            a.pagination__button.button.button--backwards.button--disabled(href=`${prefix}page=${page - 1}` aria-label='Страница назад') Назад
+        - for (let i = start; i <= end; i++)
+          li.pagination__item(class={'pagination__item--active': i === page})
+            a(href=`${prefix}page=${i}`)= i
+        if end < totalPages
+          li
+            a.pagination__button.button.button--forward(href=`${prefix}page=${page + 1}` aria-label='Страница вперед') Вперед
 
   block content
   script(src='/js/vendor.js')

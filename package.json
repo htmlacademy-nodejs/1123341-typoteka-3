@@ -7,7 +7,7 @@
     "test": "npm run eslint && npm run jest",
     "jest": "jest",
     "eslint": "eslint --ext .js src/",
-    "start": "cross-env LOG_LEVEL=error node -r dotenv/config ./src/service/service.js",
+    "start": "cross-env LOG_LEVEL=error nodemon --watch src/service -r dotenv/config ./src/service/service.js",
     "start::debug": "cross-env LOG_LEVEL=info NODE_ENV=development node -r dotenv/config ./src/service/service.js",
     "start-front-server": "nodemon --watch src/express --ext js,mjs,json,pug ./src/express/index.js"
   },
