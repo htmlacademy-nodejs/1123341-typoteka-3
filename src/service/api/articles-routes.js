@@ -45,6 +45,7 @@ module.exports = (app, articlesService, commentService) => {
 
   route.post(`/`, articleValidator, async (req, res) => {
     const article = await articlesService.create(req.body);
+
     res
       .status(HttpCode.CREATED)
       .json(article);
