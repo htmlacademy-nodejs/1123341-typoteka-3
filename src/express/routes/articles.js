@@ -26,7 +26,7 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   const {body, file} = req;
 
   const articleData = {
-    picture: file.filename,
+    picture: file ? file.filename : ``,
     title: body.title,
     announce: body.announce,
     fullText: body[`full-text`],

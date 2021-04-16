@@ -8,20 +8,18 @@ module.exports = Joi.object({
     .max(255)
     .required(),
 
-  description: Joi.string()
+  announce: Joi.string()
+    .min(1)
+    .max(255)
+    .required(),
+
+  fullText: Joi.string()
     .min(1)
     .max(255)
     .required(),
 
   picture: Joi.string()
     .empty(``)
-    .required(),
-
-  sum: Joi.number()
-    .required(),
-
-  type: Joi.string()
-    .valid(`OFFER`, `SALE`)
     .required(),
 
   categories: Joi.array()
