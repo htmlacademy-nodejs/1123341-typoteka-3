@@ -35,8 +35,6 @@ authRouter.post(`/register`, upload.single(`user-avatar`), async (req, res) => {
     repeat: body[`user-password-again`]
   };
 
-  console.log(userData);
-
   try {
     await api.createUser(userData);
     res.redirect(`/login`);
