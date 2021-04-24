@@ -110,9 +110,11 @@ const mockArticles = [
   }
 ];
 
+const mockUsers = [];
+
 const createAPI = async () => {
   const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-  await initDB(mockDB, mockArticles, mockCategories);
+  await initDB(mockDB, mockArticles, mockCategories, mockUsers);
 
   const app = express();
   app.use(express.json());
