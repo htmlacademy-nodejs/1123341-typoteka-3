@@ -92,6 +92,19 @@ const Aliase = {
 
 const ARTICLES_PER_PAGE = 8;
 
+const RegisterMessage = {
+  USER_ALREADY_REGISTER: `Пользователь с таким email уже зарегистрирован`,
+  WRONG_EMAIL: `Неправильный email`,
+  REQUIRED_FIELD: `Поле обязательно для заполнения`,
+  MIN_PASSWORD_LENGTH: `Пароль должен быть не меньше 6 символов`,
+  MAX_PASSWORD_LENGTH: `Пароль должен быть не больше 12 символов`,
+  PASSWORDS_NOT_EQUALS: `Пароли не совпадают`,
+  EMPTY_VALUE: `Не указано значение`,
+};
+
+const MIN_PASSWORD_LENGTH = 6;
+const MAX_PASSWORD_LENGTH = 12;
+
 module.exports = {
   DateCypher,
   DEFAULT_COMMAND,
@@ -105,6 +118,9 @@ module.exports = {
   categories,
   users,
   Aliase,
-  ARTICLES_PER_PAGE
+  ARTICLES_PER_PAGE,
+  RegisterMessage,
+  MIN_PASSWORD_LENGTH,
+  MAX_PASSWORD_LENGTH
 };
 

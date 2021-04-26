@@ -104,13 +104,14 @@ const mockArticles = [
   }
 ];
 
+const mockUsers = [];
 const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
 
 const app = express();
 app.use(express.json());
 
 beforeAll(async () => {
-  await initDB(mockDB, mockArticles, mockCategories);
+  await initDB(mockDB, mockArticles, mockCategories, mockUsers);
   searchRoutes(app, new SearchService(mockDB));
 });
 

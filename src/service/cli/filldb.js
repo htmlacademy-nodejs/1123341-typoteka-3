@@ -104,7 +104,9 @@ module.exports = {
     }
 
     const articles = generateArticles(fullMockData, articlesCount);
+    const {categories} = fullMockData;
+    const users = [];
 
-    return initDatabase(sequelize, articles, fullMockData.categories);
+    return initDatabase(sequelize, articles, categories, users);
   }
 };

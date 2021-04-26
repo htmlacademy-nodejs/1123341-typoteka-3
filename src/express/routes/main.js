@@ -40,8 +40,6 @@ mainRouter.get(`/search`, async (req, res) => {
   }
 });
 
-mainRouter.get(`/register`, (req, res) => res.render(`registration`));
-mainRouter.get(`/login`, (req, res) => res.render(`registration`));
 mainRouter.get(`/categories`, (req, res) => res.render(`./admin/admin-categories`));
 
 module.exports = mainRouter;

@@ -18,24 +18,31 @@ class API {
     return response.data;
   }
 
-  getArticles({offset, limit, comments} = {}) {
-    return this._load(`/articles`, {params: {offset, limit, comments}});
+  async getArticles({offset, limit, comments} = {}) {
+    return await this._load(`/articles`, {params: {offset, limit, comments}});
   }
 
-  getArticle({id, comments} = {}) {
-    return this._load(`/articles/${id}`, {params: {comments}});
+  async getArticle({id, comments} = {}) {
+    return await this._load(`/articles/${id}`, {params: {comments}});
   }
 
-  search(query) {
-    return this._load(`/search`, {params: {query}});
+  async search(query) {
+    return await this._load(`/search`, {params: {query}});
   }
 
-  getCategories({sumUpEquals} = {}) {
-    return this._load(`/categories`, {params: {sumUpEquals}});
+  async getCategories({sumUpEquals} = {}) {
+    return await this._load(`/categories`, {params: {sumUpEquals}});
   }
 
-  createArticle(data) {
-    return this._load(`/articles`, {
+  async createArticle(data) {
+    return await this._load(`/articles`, {
+      method: `POST`,
+      data
+    });
+  }
+
+  async createUser(data) {
+    return await this._load(`/user`, {
       method: `POST`,
       data
     });
