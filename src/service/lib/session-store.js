@@ -1,18 +1,28 @@
-"use strict";
+'use strict';
 
-const sequelize = require(`./sequelize`);
 const expressSession = require(`express-session`);
-const SequelizeStore = require(`connect-session-sequelize`)(expressSession.Store);
+const sequelize = require(`../lib/sequelize`);
 
 const {DB_SECRET_SESSION} = process.env;
 
-const sequelizeStore = new SequelizeStore({
-  db: sequelize,
-  expiration: 180000,
-  checkExpirationInterval: 60000,
-});
+module.exports = async (express) => {
+  const SequelizeStore = require(`connect-session-sequelize`)(expressSession.Store);
 
-module.exports = {
-  secretSession: DB_SECRET_SESSION,
-  sequelizeStore
+  const mySessionStore = new SequelizeStore({
+    db: sequelize,
+    expiration: 180000,
+    checkExpirationInterval: 60000,
+  });
+
+  express.use(expressSession({
+    store: mySessionStore,
+    secret: DB_SECRET_SESSION,
+    resave: false,
+    saveUninitialized: false,
+    name: `session_id`
+  }));
+
+  (async () => {
+    await sequelize.sync({force: true});
+  })();
 };

@@ -2,17 +2,7 @@ extends layout.pug
 
 block content
   .wrapper
-    header.header
-      a.header__logo.logo(href='#')
-        img.logo__image(src='img/icons/logo-image-only.svg' alt='логотип Тайпотеки')
-        span.logo__name Типотека
-      nav.header__nav
-        ul.header__nav-list
-          li.header__list-item
-            a.header__popup(href='#') Регистрация
-          li.header__list-item
-            a.header__enter(href='#') Вход с паролем
-      a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
+    include partials/header.pug
     main
       h1.visually-hidden Регистрация пользователя
       section.modal
@@ -48,19 +38,24 @@ block content
                   input.visually-hidden(type='file' name="user-avatar")
                   | Загрузить фото профиля
               button.form__submit-btn.form__submit-btn--register.button.button--colored(type='submit') Зарегистрироваться
-          .popup__form.popup__form--hidden.form.form--log-in
-            form(action='#' method='get')
-              .form__field
-                label
-                  input(type='email' placeholder='Электронная почта' required)
-              .form__field
-                label
-                  input(type='password' placeholder='Пароль' required)
-              button.form__submit-btn.form__submit-btn--log-in.button.button--colored(type='submit') Войти
               if errorsMessages
                 ul
                   each error in errorsMessages
                     li #{error}
+          .popup__form.popup__form--hidden.form.form--log-in
+            form(action='/login' method='post' enctype="multipart/form-data" autocomplete="off")
+              .form__field
+                label
+                  input(type='email' name="member-email" placeholder='Электронная почта' required)
+              .form__field
+                label
+                  input(type='password' name="member-pass" placeholder='Пароль' required)
+              button.form__submit-btn.form__submit-btn--log-in.button.button--colored(type='submit') Войти
+              .visually-hidden
+                if errorsMessages
+                  ul
+                    each error in errorsMessages
+                      li #{error}
         .modal__overlay
     include partials/footer.pug
   script(src='js/main.js')

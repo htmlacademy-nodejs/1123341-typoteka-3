@@ -4,9 +4,11 @@ const dayjs = require(`dayjs`);
 const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
+const priveteRoute = require(`../../service/validators/private-route`);
 const {ARTICLES_PER_PAGE} = require(`../../constants`);
 
-mainRouter.get(`/`, async (req, res) => {
+mainRouter.get(`/`, priveteRoute, async (req, res) => {
+  const {isLogged, userAvatar, userName, userSurname} = req.session;
   let {page = 1} = req.query;
   page = parseInt(page, 10);
 
@@ -19,7 +21,17 @@ mainRouter.get(`/`, async (req, res) => {
   ]);
 
   const totalPages = Math.ceil(allArticlesSum / ARTICLES_PER_PAGE);
-  res.render(`./main/main-page-admin-pager`, {articles: articlesOfPage, page, totalPages, categories, dayjs});
+  res.render(`./main/main-page-admin-pager`, {
+    articles: articlesOfPage,
+    page,
+    totalPages,
+    categories,
+    dayjs,
+    isLogged,
+    userAvatar,
+    userName,
+    userSurname
+  });
 });
 
 mainRouter.get(`/search`, async (req, res) => {

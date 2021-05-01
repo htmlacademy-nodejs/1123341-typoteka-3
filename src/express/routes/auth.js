@@ -3,9 +3,14 @@
 const {Router} = require(`express`);
 const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
+const bcrypt = require(`bcrypt`);
+const saltRounds = 10;
 const path = require(`path`);
 const authRouter = new Router();
 const api = require(`../api`).getAPI();
+const formReliability = require(`../../service/validators/form-reliability`);
+
+
 const UPLOAD_DIR = `../upload/img/`;
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 
@@ -52,7 +57,47 @@ authRouter.post(`/register`, upload.single(`user-avatar`), async (req, res) => {
 });
 
 authRouter.get(`/login`, async (req, res) => {
-  res.render(`login`);
+  req.session.hiddenValue = nanoid(10);
+  const {hiddenValue} = req.session;
+  const hashedValue = await bcrypt.hash(hiddenValue, saltRounds);
+  res.render(`login`, {hashedValue});
+});
+
+authRouter.post(`/login`, upload.none(), formReliability, async (req, res) => {
+  const {body} = req;
+  const memberData = {
+    email: body[`member-email`],
+    password: body[`member-pass`],
+  };
+
+  try {
+    console.log(memberData);
+    const loggedUser = await api.loginUser(memberData);
+    req.session.isLogged = true;
+    req.session.userAvatar = loggedUser.userAvatar;
+    req.session.userName = loggedUser.userName;
+    req.session.userSurname = loggedUser.userSurname;
+    res.redirect(`/`);
+
+  } catch (error) {
+    let {data: details} = error.response;
+    details = Array.isArray(details) ? details : [details];
+    const {hiddenValue} = req.session;
+    const hashedValue = await bcrypt.hash(hiddenValue, saltRounds);
+
+    res.render(`login`, {
+      errorsMessages: details.map((errorDescription) => errorDescription.message),
+      hashedValue
+    });
+
+    return;
+  }
+});
+
+authRouter.get(`/logout`, async (req, res) => {
+  req.session.destroy(() =>{
+    res.redirect(`/login`);
+  });
 });
 
 module.exports = authRouter;

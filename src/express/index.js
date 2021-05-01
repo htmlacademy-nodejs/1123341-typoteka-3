@@ -1,8 +1,6 @@
 'use strict';
 
 const express = require(`express`);
-const expressSession = require(`express-session`);
-const {secretSession, sequelizeStore} = require(`../service/lib/session-store`);
 const path = require(`path`);
 const articlesRoutes = require(`./routes/articles`);
 const myRoutes = require(`./routes/my`);
@@ -16,14 +14,6 @@ const UPLOAD_DIR = `upload`;
 
 const app = express();
 sessionStore(app);
-
-app.use(expressSession({
-  store: sequelizeStore,
-  secret: secretSession,
-  resave: false,
-  saveUninitialized: false,
-  name: `session_id`
-}));
 
 app.use(`/articles`, articlesRoutes);
 app.use(`/my`, myRoutes);
