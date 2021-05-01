@@ -8,12 +8,14 @@ const articlesRoutes = require(`./routes/articles`);
 const myRoutes = require(`./routes/my`);
 const mainRoutes = require(`./routes/main`);
 const authRoutes = require(`./routes/auth`);
+const sessionStore = require(`../service/lib/session-store`);
 
 const DEFAULT_PORT = 8080;
 const PUBLIC_DIR = `public`;
 const UPLOAD_DIR = `upload`;
 
 const app = express();
+sessionStore(app);
 
 app.use(expressSession({
   store: sequelizeStore,

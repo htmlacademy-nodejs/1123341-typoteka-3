@@ -102,6 +102,13 @@ const RegisterMessage = {
   EMPTY_VALUE: `Не указано значение`,
 };
 
+const LoginMessage = {
+  USER_NOT_EXISTS: `Пользователь с таким email не зарегистрирован`,
+  WRONG_PASSWORD: `Неправильно введён пароль`,
+  WRONG_EMAIL: `Неправильный email`,
+  REQUIRED_FIELD: `Поле обязательно для заполнения`,
+};
+
 const MIN_PASSWORD_LENGTH = 6;
 const MAX_PASSWORD_LENGTH = 12;
 
@@ -120,6 +127,7 @@ module.exports = {
   Aliase,
   ARTICLES_PER_PAGE,
   RegisterMessage,
+  LoginMessage,
   MIN_PASSWORD_LENGTH,
   MAX_PASSWORD_LENGTH
 };
