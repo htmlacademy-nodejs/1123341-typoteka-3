@@ -8,7 +8,7 @@ const initDB = require(`../lib/init-db`);
 const user = require(`./user-routes`);
 const DataService = require(`../data-service/users-service`);
 
-const {HttpCode, RegisterMessage} = require(`../../constants`);
+const {HttpCode, RegisterMessage, LoginMessage} = require(`../../constants`);
 
 const mockUsers = [
   {
@@ -126,4 +126,87 @@ describe(`API refuses to create a user if form's data is valid, but email occupi
   test(`Status code 400`, () => expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));
   test(`Error message: Пользователь с таким email уже зарегистрирован`,
       () => expect(response.body.message[0]).toBe(RegisterMessage.USER_ALREADY_REGISTER));
+});
+
+// --------------------------------------------------------------------------------------------------------- //
+
+describe(`The client is authenticated successfully`, () => {
+  const existingUser = {
+    email: `dlfwe@gmail.com`,
+    password: `dibby1234!`
+  };
+
+  let response;
+
+  beforeAll(async () => {
+    response = await request(app)
+      .post(`/login`)
+      .send(existingUser);
+  });
+
+  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+});
+
+describe(`The client isn't authenticated. The formData is invalid`, () => {
+  const wrongData = {
+    email: `dlfwegmail.com`,
+    password: 123123
+  };
+
+  let response;
+
+  beforeAll(async () => {
+    response = await request(app)
+      .post(`/login`)
+      .send(wrongData);
+  });
+
+  test(`Status code 400`, () => expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));
+  test(`There are all filling mistakes from form's data`, () => {
+    const allMistakes = [
+      `Неправильный email`,
+      `"password" must be a string`,
+    ];
+
+    expect(response.body.message).toEqual(expect.arrayContaining(allMistakes));
+  });
+
+});
+
+describe(`The client isn't authenticated. The user doesn't exist`, () => {
+  const wrongData = {
+    email: `notUser@gmail.com`,
+    password: `noMatter`
+  };
+
+  let response;
+
+  beforeAll(async () => {
+    response = await request(app)
+      .post(`/login`)
+      .send(wrongData);
+  });
+
+  test(`Status code 404`, () => expect(response.statusCode).toBe(HttpCode.NOT_FOUND));
+  test(`Error message: Пользователь с таким email не зарегистрирован`,
+      () => expect(response.body.message[0]).toBe(LoginMessage.USER_NOT_EXISTS));
+});
+
+describe(`The client isn't authenticated. The user's password is invalid`, () => {
+  const wrongData = {
+    email: `dlfwe@gmail.com`,
+    password: `dibby12345!`
+  };
+
+  let response;
+
+  beforeAll(async () => {
+    response = await request(app)
+      .post(`/login`)
+      .send(wrongData);
+  });
+
+  test(`Status code 400`, () => expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));
+  test(`Error message: Неправильно введён пароль`,
+      () => expect(response.body.message[0]).toBe(LoginMessage.WRONG_PASSWORD));
 });
