@@ -9,15 +9,26 @@ block content
         .popup.popup--registration
           button.popup__button.button.button--popup-close(type='button' aria-label='Закрыть окно') Закрыть окно
           h2.visually-hidden Форма регистрации
-          ul.popup__tabs
-            li.popup__tab.popup__tab--active.popup__tab--register
-              button.popup__tab-switcher.button(type='button') Регистрация
-            li.popup__tab.popup__tab--log-in
-              button.popup__tab-switcher.button(type='button') Войти
-          .popup__form.popup__form--active.form.form--register
-            if errorsMessages
+
+          case loginPopup
+            when `authentification`
+              ul.popup__tabs
+                li.popup__tab.popup__tab--register
+                  button.popup__tab-switcher.button(onclick="window.location.href='/register'" type='button') Регистрация
+                li.popup__tab.popup__tab--active.popup__tab--log-in
+                  button.popup__tab-switcher.button(onclick="window.location.href='/login'" type='button') Войти
+
+            default
+              ul.popup__tabs
+                li.popup__tab.popup__tab--active.popup__tab--register
+                  button.popup__tab-switcher.button(onclick="window.location.href='/register'" type='button') Регистрация
+                li.popup__tab.popup__tab--log-in
+                  button.popup__tab-switcher.button(onclick="window.location.href='/login'" type='button') Войти
+
+          .popup__form.form.form--register(class=`${loginPopup === `authentification` ? `popup__form--hidden` : `popup__form--active`}`)
+            if regErrorsMessages
               ul
-                each error in errorsMessages
+                each error in regErrorsMessages
                   li #{error}
             form(action='/register' method='post' enctype="multipart/form-data" autocomplete="off")
               .form__field
@@ -37,15 +48,15 @@ block content
                   input(type='password' name="user-password-again" placeholder='Повтор пароля' required)
               .form__image-loader
                 a.form__avatar.avatar
-                  img(src=`/img/${userAvatar}` alt='аватар пользователя')
+                  img(src=`img/icons/smile.svg` alt='аватар пользователя')
                 label
                   input.visually-hidden(type='file' name="user-avatar")
                   | Загрузить фото профиля
               button.form__submit-btn.form__submit-btn--register.button.button--colored(type='submit') Зарегистрироваться
-          .popup__form.popup__form--hidden.form.form--log-in
-            if errorsMessages
+          .popup__form.form.form--log-in(class=`${loginPopup === `authentification` ? `popup__form--active` : `popup__form--hidden`}`)
+            if authErrorsMessages
               ul
-                each error in errorsMessages
+                each error in authErrorsMessages
                   li #{error}
             form(action='/login' method='post' enctype="multipart/form-data" autocomplete="off")
               .form__field.visually-hidden

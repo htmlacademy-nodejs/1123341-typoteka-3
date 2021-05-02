@@ -88,8 +88,6 @@ describe(`API refuses to create a user if form's data is invalid`, () => {
     response = await request(app)
       .post(`/user`)
       .send(newUser);
-
-    console.log(response.body.message);
   });
 
   test(`Status code 400`, () => expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));

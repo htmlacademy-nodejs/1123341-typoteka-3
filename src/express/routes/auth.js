@@ -9,7 +9,10 @@ const path = require(`path`);
 const authRouter = new Router();
 const api = require(`../api`).getAPI();
 const formReliability = require(`../../service/validators/form-reliability`);
-
+const openedPopup = {
+  AUTHENTIFICATION: `authentification`,
+  REGISTRATION: `registration`
+};
 
 const UPLOAD_DIR = `../upload/img/`;
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
@@ -26,10 +29,14 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 authRouter.get(`/register`, async (req, res) => {
+  res.render(`registration`, {loginPopup: openedPopup.REGISTRATION});
+});
+
+authRouter.get(`/login`, async (req, res) => {
   req.session.hiddenValue = nanoid(10);
   const {hiddenValue} = req.session;
   const hashedValue = await bcrypt.hash(hiddenValue, saltRounds);
-  res.render(`registration`, {hashedValue});
+  res.render(`registration`, {hashedValue, loginPopup: openedPopup.AUTHENTIFICATION});
 });
 
 authRouter.post(`/register`, upload.single(`user-avatar`), async (req, res) => {
@@ -52,8 +59,9 @@ authRouter.post(`/register`, upload.single(`user-avatar`), async (req, res) => {
     details = Array.isArray(details) ? details : [details];
 
     res.render(`registration`, {
-      errorsMessages: details.map((errorDescription) => errorDescription.message)}
-    );
+      regErrorsMessages: details.map((errorDescription) => errorDescription.message),
+      loginPopup: openedPopup.REGISTRATION
+    });
 
     return;
   }
@@ -67,7 +75,6 @@ authRouter.post(`/login`, upload.none(), formReliability, async (req, res) => {
   };
 
   try {
-    console.log(memberData);
     const loggedUser = await api.loginUser(memberData);
     req.session.isLogged = true;
     req.session.userAvatar = loggedUser.userAvatar;
@@ -81,9 +88,10 @@ authRouter.post(`/login`, upload.none(), formReliability, async (req, res) => {
     const {hiddenValue} = req.session;
     const hashedValue = await bcrypt.hash(hiddenValue, saltRounds);
 
-    res.render(`login`, {
-      errorsMessages: details.map((errorDescription) => errorDescription.message),
-      hashedValue
+    res.render(`registration`, {
+      authErrorsMessages: details.map((errorDescription) => errorDescription.message),
+      hashedValue,
+      loginPopup: openedPopup.AUTHENTIFICATION
     });
 
     return;
@@ -92,7 +100,7 @@ authRouter.post(`/login`, upload.none(), formReliability, async (req, res) => {
 
 authRouter.get(`/logout`, async (req, res) => {
   req.session.destroy(() =>{
-    res.redirect(`/register`);
+    res.redirect(`/login`);
   });
 });
 
