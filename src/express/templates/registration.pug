@@ -15,6 +15,10 @@ block content
             li.popup__tab.popup__tab--log-in
               button.popup__tab-switcher.button(type='button') Войти
           .popup__form.popup__form--active.form.form--register
+            if errorsMessages
+              ul
+                each error in errorsMessages
+                  li #{error}
             form(action='/register' method='post' enctype="multipart/form-data" autocomplete="off")
               .form__field
                 label
@@ -33,17 +37,21 @@ block content
                   input(type='password' name="user-password-again" placeholder='Повтор пароля' required)
               .form__image-loader
                 a.form__avatar.avatar
-                  img(src='img/icons/smile.svg' alt='аватар пользователя')
+                  img(src=`/img/${userAvatar}` alt='аватар пользователя')
                 label
                   input.visually-hidden(type='file' name="user-avatar")
                   | Загрузить фото профиля
               button.form__submit-btn.form__submit-btn--register.button.button--colored(type='submit') Зарегистрироваться
-              if errorsMessages
-                ul
-                  each error in errorsMessages
-                    li #{error}
           .popup__form.popup__form--hidden.form.form--log-in
+            if errorsMessages
+              ul
+                each error in errorsMessages
+                  li #{error}
             form(action='/login' method='post' enctype="multipart/form-data" autocomplete="off")
+              .form__field.visually-hidden
+                label
+                  input(type="hidden" name="member-csrf" value=hashedValue required="")
+
               .form__field
                 label
                   input(type='email' name="member-email" placeholder='Электронная почта' required)
@@ -51,11 +59,6 @@ block content
                 label
                   input(type='password' name="member-pass" placeholder='Пароль' required)
               button.form__submit-btn.form__submit-btn--log-in.button.button--colored(type='submit') Войти
-              .visually-hidden
-                if errorsMessages
-                  ul
-                    each error in errorsMessages
-                      li #{error}
         .modal__overlay
     include partials/footer.pug
   script(src='js/main.js')

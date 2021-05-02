@@ -25,8 +25,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-authRouter.get(`/register`, (req, res) => {
-  res.render(`registration`);
+authRouter.get(`/register`, async (req, res) => {
+  req.session.hiddenValue = nanoid(10);
+  const {hiddenValue} = req.session;
+  const hashedValue = await bcrypt.hash(hiddenValue, saltRounds);
+  res.render(`registration`, {hashedValue});
 });
 
 authRouter.post(`/register`, upload.single(`user-avatar`), async (req, res) => {
@@ -54,13 +57,6 @@ authRouter.post(`/register`, upload.single(`user-avatar`), async (req, res) => {
 
     return;
   }
-});
-
-authRouter.get(`/login`, async (req, res) => {
-  req.session.hiddenValue = nanoid(10);
-  const {hiddenValue} = req.session;
-  const hashedValue = await bcrypt.hash(hiddenValue, saltRounds);
-  res.render(`login`, {hashedValue});
 });
 
 authRouter.post(`/login`, upload.none(), formReliability, async (req, res) => {
@@ -96,7 +92,7 @@ authRouter.post(`/login`, upload.none(), formReliability, async (req, res) => {
 
 authRouter.get(`/logout`, async (req, res) => {
   req.session.destroy(() =>{
-    res.redirect(`/login`);
+    res.redirect(`/register`);
   });
 });
 
