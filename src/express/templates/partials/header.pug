@@ -18,4 +18,8 @@ header.header
   if isLogged
     a.header__avatar.avatar
       img(src=`img/${userAvatar}` alt='аватар пользователя')
+    button.button.button--colored.header__button-new Новая запись
+    .header__dropdown
+      a.button.button--burger.header__burger(href='#') Открыть меню
+      include header-navigation.pug
   a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
