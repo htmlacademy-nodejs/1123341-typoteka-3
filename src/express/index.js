@@ -1,24 +1,26 @@
 'use strict';
 
 const express = require(`express`);
+const cookieParser = require(`cookie-parser`);
 const path = require(`path`);
 const articlesRoutes = require(`./routes/articles`);
 const myRoutes = require(`./routes/my`);
 const mainRoutes = require(`./routes/main`);
 const authRoutes = require(`./routes/auth`);
-const sessionStore = require(`../service/lib/session-store`);
+const {refreshTokenService} = require(`../service/api`);
 
+const {DB_SECRET_SESSION} = process.env;
 const DEFAULT_PORT = 8080;
 const PUBLIC_DIR = `public`;
 const UPLOAD_DIR = `upload`;
 
 const app = express();
-sessionStore(app);
+app.use(cookieParser(DB_SECRET_SESSION));
 
 app.use(`/articles`, articlesRoutes);
 app.use(`/my`, myRoutes);
 app.use(`/`, mainRoutes);
-app.use(`/`, authRoutes);
+authRoutes(app, refreshTokenService);
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
 app.use(express.static(path.resolve(__dirname, UPLOAD_DIR)));
