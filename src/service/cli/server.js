@@ -3,7 +3,7 @@
 const express = require(`express`);
 const fs = require(`fs`).promises;
 const {HttpCode, API_PREFIX} = require(`../../constants`);
-const routes = require(`../api`);
+const {router} = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
 const sequelize = require(`../lib/sequelize`);
 
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(API_PREFIX, routes);
+app.use(API_PREFIX, router);
 
 app.get(`/posts`, async (req, res) => {
   try {

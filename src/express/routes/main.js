@@ -1,14 +1,19 @@
 'use strict';
 
 const dayjs = require(`dayjs`);
+const jwt = require(`jsonwebtoken`);
 const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
-const priveteRoute = require(`../../service/validators/private-route`);
-const {ARTICLES_PER_PAGE} = require(`../../constants`);
+const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
 
-mainRouter.get(`/`, priveteRoute, async (req, res) => {
-  const {isLogged, userAvatar, userName, userSurname} = req.session;
+const {ARTICLES_PER_PAGE} = require(`../../constants`);
+const {JWT_ACCESS_SECRET} = process.env;
+
+mainRouter.get(`/`, authenticateJwt, async (req, res) => {
+  const token = req.cookies[`authorization`];
+  const userData = jwt.verify(token, JWT_ACCESS_SECRET);
+
   let {page = 1} = req.query;
   page = parseInt(page, 10);
 
@@ -27,10 +32,10 @@ mainRouter.get(`/`, priveteRoute, async (req, res) => {
     totalPages,
     categories,
     dayjs,
-    isLogged,
-    userAvatar,
-    userName,
-    userSurname
+    isLogged: userData.isLogged,
+    userAvatar: userData.userAvatar,
+    userName: userData.userName,
+    userSurname: userData.userSurname
   });
 });
 

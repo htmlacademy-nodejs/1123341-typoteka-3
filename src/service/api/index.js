@@ -12,20 +12,24 @@ const {
   ArticlesService,
   CommentsService,
   SearchService,
-  UserService
+  UserService,
+  RefreshTokenService
 } = require(`../data-service`);
 
 const sequelize = require(`../lib/sequelize`);
 const defineModels = require(`../models`);
 defineModels(sequelize);
 
-const app = new Router();
+const router = new Router();
 
 (async () => {
-  categories(app, new CategoriesService(sequelize));
-  articles(app, new ArticlesService(sequelize), new CommentsService(sequelize));
-  search(app, new SearchService(sequelize));
-  user(app, new UserService(sequelize));
+  categories(router, new CategoriesService(sequelize));
+  articles(router, new ArticlesService(sequelize), new CommentsService(sequelize));
+  search(router, new SearchService(sequelize));
+  user(router, new UserService(sequelize));
 })();
 
-module.exports = app;
+module.exports = {
+  router,
+  refreshTokenService: new RefreshTokenService(sequelize)
+};
