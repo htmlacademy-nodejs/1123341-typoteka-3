@@ -1,6 +1,8 @@
 "use strict";
 
 const defineModels = require(`../models`);
+const bcrypt = require(`bcrypt`);
+const saltRounds = 10;
 const {Aliase} = require(`../../constants`);
 
 module.exports = async (sequelize, articles, categories, users) => {
@@ -26,7 +28,14 @@ module.exports = async (sequelize, articles, categories, users) => {
     });
 
   const userPromises = users
-    .map(async (user) => await User.create(user));
+    .map(async (user) => {
+      const {password} = user;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const updatedFormData = {...user, password: hashedPassword};
+      delete updatedFormData.repeat;
+      const newUser = await User.create(updatedFormData);
+      return newUser.get();
+    });
 
   await Promise.all([...articlesPromises, ...userPromises]);
 };
