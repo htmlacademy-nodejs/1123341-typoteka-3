@@ -33,7 +33,7 @@ module.exports = async (sequelize, articles, categories, users) => {
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       const updatedFormData = {...user, password: hashedPassword};
       delete updatedFormData.repeat;
-      const newUser = await User.create(updatedFormData);
+      const newUser = await User.create(updatedFormData, {include: [Aliase.COMMENTS, Aliase.ARTICLES]});
       return newUser.get();
     });
 

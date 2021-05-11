@@ -48,38 +48,38 @@ const categories = new Map([
 const users = [
   {
     email: `ivanov@example.com`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf99`,
-    firstName: `Иван`,
-    lastName: `Иванов`,
-    avatar: `avatar-1.png`
+    password: `gilespy666`,
+    userName: `Иван`,
+    userSurname: `Иванов`,
+    userAvatar: `avatar-1.png`
   },
   {
     email: `kazak@example.com`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf98`,
-    firstName: `Родион`,
-    lastName: `Молотов`,
-    avatar: `avatar-2.png`
+    password: `sandramandra_`,
+    userName: `Родион`,
+    userSurname: `Молотов`,
+    userAvatar: `avatar-2.png`
   },
   {
     email: `westlife@example.com`,
-    passwordHash: `5f4dcc3b5aa76d5d61d8327deb882cf99`,
-    firstName: `Лось`,
-    lastName: `Восточный`,
-    avatar: `avatar-3.png`
+    password: `couching123334`,
+    userName: `Лось`,
+    userSurname: `Восточный`,
+    userAvatar: `avatar-3.png`
   },
   {
     email: `cardan@example.com`,
-    passwordHash: `5f4dcc3bd5aa765d61d8327deb882cf99`,
-    firstName: `Майкл`,
-    lastName: `Джонсон`,
-    avatar: `avatar-4.png`
+    password: `verona_@dfed`,
+    userName: `Майкл`,
+    userSurname: `Джонсон`,
+    userAvatar: `avatar-4.png`
   },
   {
     email: `petrov@example.com`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb8d82cf99`,
-    firstName: `Пётр`,
-    lastName: `Петров`,
-    avatar: `avatar-5.png`
+    password: `11111111`,
+    userName: `Пётр`,
+    userSurname: `Петров`,
+    userAvatar: `avatar-5.png`
   }
 ];
 

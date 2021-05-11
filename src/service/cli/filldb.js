@@ -5,7 +5,7 @@ const chalk = require(`chalk`);
 const path = require(`path`);
 const {getRandomInt, shuffle} = require(`../../utils`);
 const {getLogger} = require(`../lib/logger`);
-const {picsNames} = require(`../../constants`);
+const {picsNames, users} = require(`../../constants`);
 const sequelize = require(`../lib/sequelize`);
 const initDatabase = require(`../lib/init-db`);
 
@@ -105,7 +105,6 @@ module.exports = {
 
     const articles = generateArticles(fullMockData, articlesCount);
     const {categories} = fullMockData;
-    const users = [];
 
     return initDatabase(sequelize, articles, categories, users);
   }
