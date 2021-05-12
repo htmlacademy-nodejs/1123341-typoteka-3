@@ -4,9 +4,10 @@ const defineModels = require(`../models`);
 const bcrypt = require(`bcrypt`);
 const saltRounds = 10;
 const {Aliase} = require(`../../constants`);
+const {getRandomInt} = require(`../../utils`);
 
 module.exports = async (sequelize, articles, categories, users) => {
-  const {Category, Article, User} = defineModels(sequelize);
+  const {Category, Article, User, Comment} = defineModels(sequelize);
   await sequelize.sync({force: true});
 
   const categoriesTable = await Category.bulkCreate(
@@ -25,6 +26,8 @@ module.exports = async (sequelize, articles, categories, users) => {
       await articlesTable.addCategories(
           article.categories.map((name) => categoryIdByName[name])
       );
+
+      return articlesTable;
     });
 
   const userPromises = users
@@ -34,8 +37,29 @@ module.exports = async (sequelize, articles, categories, users) => {
       const updatedFormData = {...user, password: hashedPassword};
       delete updatedFormData.repeat;
       const newUser = await User.create(updatedFormData, {include: [Aliase.COMMENTS, Aliase.ARTICLES]});
-      return newUser.get();
+      return newUser;
     });
 
-  await Promise.all([...articlesPromises, ...userPromises]);
+  const usersModels = await Promise.all([...userPromises]);
+  const articlesModels = await Promise.all([...articlesPromises]);
+  const commentsModels = await Comment.findAll({raw: true});
+
+  const articlesIdArray = articlesModels.reduce((acc, next) => {
+    acc.push(next.id);
+    return acc;
+  }, []);
+
+  const commentsIdArray = commentsModels.reduce((acc, next) => {
+    acc.push(next.id);
+    return acc;
+  }, []);
+
+  for (let i = 0; i < articlesIdArray.length; i++) {
+    usersModels[getRandomInt(0, usersModels.length - 1)].addArticles(articlesIdArray[i]);
+  }
+
+  for (let i = 0; i < commentsIdArray.length; i++) {
+    usersModels[getRandomInt(0, usersModels.length - 1)].addComments(commentsIdArray[i]);
+  }
+
 };

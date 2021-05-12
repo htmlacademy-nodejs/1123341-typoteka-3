@@ -30,7 +30,7 @@ const defineModels = (sequelize) => {
 
   Article.belongsToMany(Category, {through: ArticleCategory, as: Aliase.CATEGORIES});
   Category.belongsToMany(Article, {through: ArticleCategory, as: Aliase.ARTICLES});
-  Category.hasMany(ArticleCategory, {as: Aliase.ARTICLES_CATEGORIES});
+  // Category.hasMany(ArticleCategory, {as: Aliase.ARTICLES_CATEGORIES});
 
   return {Category, Comment, Article, User, ArticleCategory, RefreshToken};
 };
