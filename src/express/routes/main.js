@@ -6,13 +6,14 @@ const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
+const authenticateJwtV2 = require(`../../service/validators/authenticate-jwt-v2`);
 
 const {ARTICLES_PER_PAGE} = require(`../../constants`);
 const {JWT_ACCESS_SECRET} = process.env;
 
-mainRouter.get(`/`, authenticateJwt, async (req, res) => {
+mainRouter.get(`/`, authenticateJwtV2, async (req, res) => {
   const token = req.cookies[`authorization`];
-  const userData = jwt.verify(token, JWT_ACCESS_SECRET);
+  let userData = token ? jwt.verify(token, JWT_ACCESS_SECRET) : {isLogged: false};
 
   let {page = 1} = req.query;
   page = parseInt(page, 10);
@@ -33,9 +34,9 @@ mainRouter.get(`/`, authenticateJwt, async (req, res) => {
     categories,
     dayjs,
     isLogged: userData.isLogged,
-    userAvatar: userData.userAvatar,
-    userName: userData.userName,
-    userSurname: userData.userSurname
+    userAvatar: userData.userAvatar || `none`,
+    userName: userData.userName || `none`,
+    userSurname: userData.userSurname || `none`
   });
 });
 
