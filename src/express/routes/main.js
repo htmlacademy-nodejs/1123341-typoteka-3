@@ -57,6 +57,6 @@ mainRouter.get(`/search`, async (req, res) => {
   }
 });
 
-mainRouter.get(`/categories`, (req, res) => res.render(`./admin/admin-categories`));
+mainRouter.get(`/categories`, authenticateJwt, (req, res) => res.render(`./admin/admin-categories`));
 
 module.exports = mainRouter;

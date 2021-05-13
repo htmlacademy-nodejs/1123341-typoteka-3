@@ -5,6 +5,7 @@ const {Router} = require(`express`);
 const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
 const path = require(`path`);
+const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
 
 const UPLOAD_DIR = path.resolve(__dirname, `../upload/img/`);
 
@@ -44,13 +45,13 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
 
 articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
 
-articlesRouter.get(`/add`, async (req, res) => {
+articlesRouter.get(`/add`, authenticateJwt, async (req, res) => {
   const categories = await api.getCategories();
   // ???????? попадают ли сюда categories
   res.render(`./admin/admin-add-new-post-empty`, {categories, dayjs});
 });
 
-articlesRouter.get(`/edit/:id`, async (req, res) => {
+articlesRouter.get(`/edit/:id`, authenticateJwt, async (req, res) => {
   const {id} = req.params;
   const [article, categories] = await Promise.all([
     api.getArticle({id}),

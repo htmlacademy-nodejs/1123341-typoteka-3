@@ -10,7 +10,7 @@ const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
 
 const {JWT_ACCESS_SECRET} = process.env;
 
-myRouter.get(`/`, async (req, res) => {
+myRouter.get(`/`, authenticateJwt, async (req, res) => {
   let articles = await api.getArticles();
   articles = articles.sort(compareDate);
   res.render(`./admin/admin-publications`, {articles, dayjs});
