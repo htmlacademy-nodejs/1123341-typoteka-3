@@ -46,7 +46,8 @@ class ArticleService {
       limit,
       offset,
       include: [Aliase.CATEGORIES, Aliase.COMMENTS],
-      distinct: true
+      distinct: true,
+      order: [[`createdAt`, `DESC`]],
     });
     return {allArticlesSum: count, articlesOfPage: rows};
   }
