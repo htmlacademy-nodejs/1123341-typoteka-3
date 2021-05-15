@@ -1,12 +1,14 @@
 'use strict';
 
 const {Aliase} = require(`../../constants`);
+const Sequelize = require(`sequelize`);
 
 class ArticleService {
   constructor(sequelize) {
     this._Article = sequelize.models.Article;
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
+    this._User = sequelize.models.User;
   }
 
   async create(articleData) {
@@ -49,7 +51,45 @@ class ArticleService {
       distinct: true,
       order: [[`createdAt`, `DESC`]],
     });
-    return {allArticlesSum: count, articlesOfPage: rows};
+
+    // таблица comments(articleId) связана с таблицей articles(id)
+    // вся структура даст нам сумму идентичных comments(userId) и запишет напротив articles(id)
+    const articles = await this._Article.findAll({
+      attributes: [
+        [`id`, `articleId`], // as
+        `title`,
+        `picture`,
+        `announce`,
+        `fullText`,
+        `createdAt`,
+        `updatedAt`,
+        `userId`,
+        [Sequelize.fn(`COUNT`, `*`), `sumOfComments`]
+      ],
+      group: [Sequelize.col(`Article.id`)],
+      order: [[Sequelize.fn(`COUNT`, `*`), `DESC`]],
+      include: [{
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        attributes: []
+      }]
+    });
+
+    const popularArticles = articles.map((article) => article.get()).slice(0, 4);
+
+    const comments = await this._Comment.findAll({order: [[`createdAt`, `DESC`]]});
+    const lastComments = comments.map((comment) => comment.get()).slice(0, 4);
+
+    const users = await this._User.findAll();
+    const allUsers = users.map((user) => user.get());
+
+    return {
+      allArticlesSum: count,
+      articlesOfPage: rows,
+      popularArticles,
+      lastComments,
+      allUsers
+    };
   }
 
   async update(id, article) {

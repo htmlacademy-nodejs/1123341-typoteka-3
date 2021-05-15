@@ -21,12 +21,13 @@ mainRouter.get(`/`, authenticateJwtV2, async (req, res) => {
   const limit = ARTICLES_PER_PAGE;
   const offset = (page - 1) * ARTICLES_PER_PAGE;
 
-  const [{allArticlesSum, articlesOfPage}, categories] = await Promise.all([
+  const [{allArticlesSum, articlesOfPage, popularArticles, lastComments, allUsers}, categories] = await Promise.all([
     api.getArticles({limit, offset, comments: true}),
     api.getCategories({sumUpEquals: true})
   ]);
 
   const totalPages = Math.ceil(allArticlesSum / ARTICLES_PER_PAGE);
+
   res.render(`./main/main-page-admin-pager`, {
     articles: articlesOfPage,
     page,
@@ -36,7 +37,10 @@ mainRouter.get(`/`, authenticateJwtV2, async (req, res) => {
     isLogged: userData.isLogged,
     userAvatar: userData.userAvatar || `none`,
     userName: userData.userName || `none`,
-    userSurname: userData.userSurname || `none`
+    userSurname: userData.userSurname || `none`,
+    lastComments,
+    popularArticles,
+    allUsers
   });
 });
 
