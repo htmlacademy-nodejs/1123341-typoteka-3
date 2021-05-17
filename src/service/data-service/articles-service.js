@@ -39,8 +39,11 @@ class ArticleService {
       ? [Aliase.CATEGORIES, Aliase.COMMENTS]
       : [Aliase.CATEGORIES];
 
+    const users = await this._User.findAll();
+    const allUsers = users.map((user) => user.get());
     const article = await this._Article.findByPk(id, {include: models});
-    return article;
+
+    return {article, allUsers};
   }
 
   async findPage(limit, offset) {

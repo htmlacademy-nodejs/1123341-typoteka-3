@@ -8,16 +8,27 @@ const {
 } = require(`../../../constants`);
 
 module.exports = Joi.object({
-  userName: Joi.string()
+  userName: Joi
+    .string()
+    .pattern(/^[a-zA-Z]+$/)
     .min(1)
     .max(255)
     .required()
     .messages({
-      'any.required': RegisterMessage.REQUIRED_FIELD
+      'any.required': RegisterMessage.REQUIRED_FIELD,
+      'string.pattern.base': RegisterMessage.USERNAME_INCORRECT_FILLING
     }),
 
-  userSurname: Joi.string()
-    .empty(``),
+  userSurname: Joi
+    .string()
+    .pattern(/^[a-zA-Z]+$/)
+    .min(1)
+    .max(255)
+    .required()
+    .messages({
+      'any.required': RegisterMessage.REQUIRED_FIELD,
+      'string.pattern.base': RegisterMessage.USESURNAME_INCORRECT_FILLING
+    }),
 
   userAvatar: Joi.string()
     .empty(``),

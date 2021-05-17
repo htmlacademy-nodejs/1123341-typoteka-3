@@ -100,6 +100,8 @@ const RegisterMessage = {
   MAX_PASSWORD_LENGTH: `Пароль должен быть не больше 12 символов`,
   PASSWORDS_NOT_EQUALS: `Пароли не совпадают`,
   EMPTY_VALUE: `Не указано значение`,
+  USERNAME_INCORRECT_FILLING: `Поле "Имя" должно содержать только буквы`,
+  USESURNAME_INCORRECT_FILLING: `Поле "Фамилия" должно содержать только буквы`
 };
 
 const LoginMessage = {

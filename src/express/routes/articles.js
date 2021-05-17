@@ -1,13 +1,16 @@
 'use strict';
 
 const dayjs = require(`dayjs`);
+const jwt = require(`jsonwebtoken`);
 const {Router} = require(`express`);
 const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
 const path = require(`path`);
+const {compareDate} = require(`../../utils`);
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
 
 const UPLOAD_DIR = path.resolve(__dirname, `../upload/img/`);
+const {JWT_ACCESS_SECRET} = process.env;
 
 const articlesRouter = new Router();
 const api = require(`../api`).getAPI();
@@ -62,13 +65,29 @@ articlesRouter.get(`/edit/:id`, authenticateJwt, async (req, res) => {
 });
 
 articlesRouter.get(`/:id`, async (req, res) => {
+  const token = req.cookies[`authorization`];
+  console.log(token);
+  let userData = token ? jwt.verify(token, JWT_ACCESS_SECRET) : {isLogged: false};
+
   const {id} = req.params;
-  const [article, categories] = await Promise.all([
+  const [{article, allUsers}, categories] = await Promise.all([
     api.getArticle({id, comments: true}),
     api.getCategories({sumUpEquals: true})
   ]);
 
-  res.render(`./post/post-user`, {article, categories, dayjs});
+  const articleComments = article.comments.sort(compareDate);
+
+  res.render(`./post/post-user`, {
+    article,
+    articleComments,
+    categories,
+    dayjs,
+    isLogged: userData.isLogged,
+    userAvatar: userData.userAvatar || `none`,
+    userName: userData.userName || `none`,
+    userSurname: userData.userSurname || `none`,
+    allUsers
+  });
 });
 
 module.exports = articlesRouter;

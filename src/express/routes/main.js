@@ -28,7 +28,7 @@ mainRouter.get(`/`, authenticateJwtV2, async (req, res) => {
 
   const totalPages = Math.ceil(allArticlesSum / ARTICLES_PER_PAGE);
 
-  res.render(`./main/main-page-admin-pager`, {
+  res.render(`./main/main`, {
     articles: articlesOfPage,
     page,
     totalPages,
