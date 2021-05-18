@@ -99,13 +99,14 @@ articlesRouter.get(`/:id`, async (req, res) => {
 });
 
 
-articlesRouter.post(`/:id`, upload.none(), async (req, _res) => {
+articlesRouter.post(`/:id`, upload.none(), async (req, res) => {
   const {body, params} = req;
   const token = req.cookies[`authorization`];
   const userData = jwt.verify(token, JWT_ACCESS_SECRET);
 
   try {
     await api.createComment(params.id, userData.id, {text: body[`user-comment`]});
+    res.redirect(`back`);
 
   } catch (error) {
     return;
