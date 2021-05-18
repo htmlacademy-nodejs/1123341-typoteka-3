@@ -48,6 +48,14 @@ class API {
     });
   }
 
+  async createComment(articleId, userId, data) {
+    return await this._load(`/articles/${articleId}/comments`, {
+      method: `POST`,
+      data,
+      params: {userId}
+    });
+  }
+
   async loginUser(data) {
     return this._load(`/login`, {
       method: `POST`,

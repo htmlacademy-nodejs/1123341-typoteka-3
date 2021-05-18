@@ -66,8 +66,16 @@ articlesRouter.get(`/edit/:id`, authenticateJwt, async (req, res) => {
 
 articlesRouter.get(`/:id`, async (req, res) => {
   const token = req.cookies[`authorization`];
-  console.log(token);
-  let userData = token ? jwt.verify(token, JWT_ACCESS_SECRET) : {isLogged: false};
+  let userData = null;
+
+  try {
+    const decodedToken = jwt.verify(token, JWT_ACCESS_SECRET);
+    userData = token ? decodedToken : {isLogged: false};
+
+  } catch (err) {
+    userData = {isLogged: false};
+  }
+
 
   const {id} = req.params;
   const [{article, allUsers}, categories] = await Promise.all([
@@ -88,6 +96,20 @@ articlesRouter.get(`/:id`, async (req, res) => {
     userSurname: userData.userSurname || `none`,
     allUsers
   });
+});
+
+
+articlesRouter.post(`/:id`, upload.none(), async (req, _res) => {
+  const {body, params} = req;
+  const token = req.cookies[`authorization`];
+  const userData = jwt.verify(token, JWT_ACCESS_SECRET);
+
+  try {
+    await api.createComment(params.id, userData.id, {text: body[`user-comment`]});
+
+  } catch (error) {
+    return;
+  }
 });
 
 module.exports = articlesRouter;

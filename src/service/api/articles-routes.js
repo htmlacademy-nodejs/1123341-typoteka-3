@@ -108,7 +108,8 @@ module.exports = (app, articlesService, commentService) => {
 
   route.post(`/:articleId/comments`, [articleExistence(articlesService), schemeValidator(commentScheme)], async (req, res) => {
     const {articleId} = req.params;
-    const comment = await commentService.create(articleId, req.body);
+    const {userId} = req.query;
+    const comment = await commentService.create(articleId, userId, req.body);
 
     res
       .status(HttpCode.CREATED)
