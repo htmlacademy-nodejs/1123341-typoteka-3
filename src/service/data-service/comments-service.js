@@ -7,21 +7,13 @@ class CommentService {
   }
 
   async create(articleId, userId, comment) {
-    let postComment;
+    let postComment = await this._Comment.create({
+      articleId,
+      userId,
+      ...comment
+    });
 
-    try {
-      postComment = await this._Comment
-        .create({
-          articleId,
-          userId,
-          ...comment
-        });
-
-    } catch (err) {
-      console.log(err);
-    }
-
-    return postComment;
+    return postComment.get();
   }
 
   async drop(id) {

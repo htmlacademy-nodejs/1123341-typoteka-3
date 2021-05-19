@@ -120,6 +120,11 @@ articlesRouter.post(`/:id`, upload.none(), async (req, res) => {
     res.redirect(`back`);
 
   } catch (error) {
+    let {data: details} = error.response;
+    details = Array.isArray(details) ? details : [details];
+    console.log(`Ниже будет порка`);
+    console.log(details);
+
     return;
   }
 });

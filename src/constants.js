@@ -104,6 +104,11 @@ const RegisterMessage = {
   USESURNAME_INCORRECT_FILLING: `Поле "Фамилия" должно содержать только буквы`
 };
 
+const commentateMessage = {
+  REQUIRED_FIELD: `Сообщение не может быть пустым, напишите что-нибудь!`,
+  MIN_LENGTH_FAILED: `Напишите не менее 20 символов`
+};
+
 const LoginMessage = {
   USER_NOT_EXISTS: `Пользователь с таким email не зарегистрирован`,
   WRONG_PASSWORD: `Неправильно введён пароль`,
@@ -131,6 +136,7 @@ module.exports = {
   RegisterMessage,
   LoginMessage,
   MIN_PASSWORD_LENGTH,
-  MAX_PASSWORD_LENGTH
+  MAX_PASSWORD_LENGTH,
+  commentateMessage
 };
 
