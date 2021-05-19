@@ -14,6 +14,9 @@ class ArticleService {
   async create(articleData) {
     const article = await this._Article.create(articleData);
     await article.addCategories(articleData.categories);
+
+    // В articleData присутствует ключ userId.
+    // В модели отсутствует ключ userId.
     return article.get();
   }
 
@@ -25,7 +28,6 @@ class ArticleService {
   }
 
   async findAll(needComments) {
-    // в массив models попадают не наименование моделей, а их алиасы
     const models = needComments
       ? [Aliase.CATEGORIES, Aliase.COMMENTS]
       : [Aliase.CATEGORIES];
@@ -56,7 +58,7 @@ class ArticleService {
     });
 
     // таблица comments(articleId) связана с таблицей articles(id)
-    // вся структура даст нам сумму идентичных comments(userId) и запишет напротив articles(id)
+    // вся структура даст нам сумму из идентичных comments(userId) и запишет напротив articles(id)
     const articles = await this._Article.findAll({
       attributes: [
         [`id`, `articleId`], // as
@@ -99,6 +101,7 @@ class ArticleService {
     const [affectedRows] = await this._Article.update(article, {
       where: {id}
     });
+
     return !!affectedRows;
   }
 }

@@ -6,7 +6,7 @@ const Sequelize = require(`sequelize`);
 const initDB = require(`../lib/init-db`);
 const searchRoutes = require(`./search-routes`);
 const SearchService = require(`../data-service/search-service`);
-const {HttpCode} = require(`../../constants`);
+const {HttpCode, users} = require(`../../constants`);
 
 const mockCategories = [
   `Программирование`,
@@ -104,14 +104,13 @@ const mockArticles = [
   }
 ];
 
-const mockUsers = [];
 const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
 
 const app = express();
 app.use(express.json());
 
 beforeAll(async () => {
-  await initDB(mockDB, mockArticles, mockCategories, mockUsers);
+  await initDB(mockDB, mockArticles, mockCategories, users);
   searchRoutes(app, new SearchService(mockDB));
 });
 

@@ -26,4 +26,8 @@ module.exports = Joi.object({
     .items(Joi.string())
     .min(1)
     .required(),
+
+  userId: Joi
+    .number()
+    .integer()
 });

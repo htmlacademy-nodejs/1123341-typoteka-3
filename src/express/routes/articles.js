@@ -28,13 +28,16 @@ const upload = multer({storage});
 
 articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   const {body, file} = req;
+  const token = req.cookies[`authorization`];
+  let userData = token ? jwt.verify(token, JWT_ACCESS_SECRET) : {isLogged: false};
 
   const articleData = {
     picture: file ? file.filename : ``,
     title: body.title,
     announce: body.announce,
     fullText: body[`full-text`],
-    categories: body.category || [`2`, `3`] // ?????? неправильно 100%
+    categories: body.category || [`2`, `3`], // ?????? неправильно 100%
+    userId: userData.id
   };
 
   try {
@@ -49,9 +52,17 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
 articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
 
 articlesRouter.get(`/add`, authenticateJwt, async (req, res) => {
-  const categories = await api.getCategories();
-  // ???????? попадают ли сюда categories
-  res.render(`./admin/admin-add-new-post-empty`, {categories, dayjs});
+  const token = req.cookies[`authorization`];
+  let userData = token ? jwt.verify(token, JWT_ACCESS_SECRET) : {isLogged: false};
+  // const categories = await api.getCategories();
+
+  res.render(`./admin/admin-add-new-post-empty`, {
+    dayjs,
+    isLogged: userData.isLogged,
+    userAvatar: userData.userAvatar || `none`,
+    userName: userData.userName || `none`,
+    userSurname: userData.userSurname || `none`,
+  });
 });
 
 articlesRouter.get(`/edit/:id`, authenticateJwt, async (req, res) => {

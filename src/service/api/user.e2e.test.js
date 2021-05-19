@@ -49,7 +49,7 @@ beforeAll(async () => {
 describe(`API creates a user if form's data is valid. Emails original`, () => {
   const newUser = {
     userName: `Jiji`,
-    userSurname: ``,
+    userSurname: `Salumeni`,
     userAvatar: ``,
     email: `sadrvkekf@mail.ru`,
     password: `f267cew*`,
@@ -108,7 +108,7 @@ describe(`API refuses to create a user if form's data is invalid`, () => {
 describe(`API refuses to create a user if form's data is valid, but email occupied`, () => {
   const newUser = {
     userName: `Jiji`,
-    userSurname: ``,
+    userSurname: `Salumeni`,
     userAvatar: ``,
     email: `dolche@gmail.com`,
     password: `f267cew*`,
