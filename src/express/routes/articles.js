@@ -122,8 +122,27 @@ articlesRouter.post(`/:id`, upload.none(), async (req, res) => {
   } catch (error) {
     let {data: details} = error.response;
     details = Array.isArray(details) ? details : [details];
-    console.log(`Ниже будет порка`);
-    console.log(details);
+
+    const {id} = req.params;
+    const [{article, allUsers}, categories] = await Promise.all([
+      api.getArticle({id, comments: true}),
+      api.getCategories({sumUpEquals: true})
+    ]);
+
+    const articleComments = article.comments.sort(compareDate);
+
+    res.render(`./post/post-user`, {
+      errorsMessages: details.map((errorDescription) => errorDescription.message),
+      article,
+      articleComments,
+      categories,
+      dayjs,
+      isLogged: userData.isLogged,
+      userAvatar: userData.userAvatar || `none`,
+      userName: userData.userName || `none`,
+      userSurname: userData.userSurname || `none`,
+      allUsers
+    });
 
     return;
   }

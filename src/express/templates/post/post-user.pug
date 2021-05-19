@@ -57,6 +57,9 @@ block content
                   label
                     textarea(rows='1' name='user-comment' placeholder='Присоединиться к обсуждению')
                   button.comments__button.button.button--colored(type='submit') Опубликовать
+                if errorsMessages
+                  each error in errorsMessages
+                    p.comments__error #{error}
             else
               .comments__footer.comments__footer--visitor
                 button.comments__button.button.button--colored(type='submit') Войти
