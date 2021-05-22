@@ -26,6 +26,10 @@ class API {
     return await this._load(`/articles/${id}`, {params: {comments}});
   }
 
+  async getArticlesByCategory({id, offset, limit, comments} = {}) {
+    return await this._load(`/articles/category/${id}`, {params: {offset, limit, comments}});
+  }
+
   async search(query) {
     return await this._load(`/search`, {params: {query}});
   }

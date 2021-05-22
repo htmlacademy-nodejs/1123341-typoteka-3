@@ -2,6 +2,7 @@
 
 const {Aliase} = require(`../../constants`);
 const Sequelize = require(`sequelize`);
+const {Op} = require(`sequelize`);
 
 class ArticleService {
   constructor(sequelize) {
@@ -9,6 +10,7 @@ class ArticleService {
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
     this._User = sequelize.models.User;
+    this._ArticleCategory = sequelize.models.ArticleCategory;
   }
 
   async create(articleData) {
@@ -27,13 +29,33 @@ class ArticleService {
     return !!deletedRows;
   }
 
-  async findAll(needComments) {
+  async findAll(needComments, {CategoryId, limit, offset} = {}) {
     const models = needComments
       ? [Aliase.CATEGORIES, Aliase.COMMENTS]
       : [Aliase.CATEGORIES];
 
-    const articles = await this._Article.findAll({include: models});
-    return articles.map((item) => item.get());
+    if (!CategoryId) {
+      const articles = await this._Article.findAll({include: models});
+      return articles.map((item) => item.get());
+
+    } else {
+      const articlesIdByCategory = await this._ArticleCategory.findAll({where: {CategoryId}});
+      const identifiers = articlesIdByCategory.map((item) => item.get().ArticleId);
+      const {count, rows} = await this._Article.findAndCountAll({
+        where: {
+          id: {
+            [Op.in]: identifiers
+          }
+        },
+        include: [Aliase.CATEGORIES, Aliase.COMMENTS],
+        distinct: true,
+        limit,
+        offset,
+        order: [[`createdAt`, `DESC`]]
+      });
+
+      return {allArticlesSum: count, articlesOfPage: rows};
+    }
   }
 
   async findOne(id, needComments) {

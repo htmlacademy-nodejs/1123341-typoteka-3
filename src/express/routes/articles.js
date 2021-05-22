@@ -10,6 +10,7 @@ const {compareDate} = require(`../../utils`);
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
 
 const UPLOAD_DIR = path.resolve(__dirname, `../upload/img/`);
+const {ARTICLES_PER_PAGE} = require(`../../constants`);
 const {JWT_ACCESS_SECRET} = process.env;
 
 const articlesRouter = new Router();
@@ -49,7 +50,45 @@ articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
-articlesRouter.get(`/category/:id`, (req, res) => res.render(`./publications-by-category`));
+articlesRouter.get(`/category/:id`, async (req, res) => {
+  const token = req.cookies[`authorization`];
+  let userData = null;
+
+  try {
+    const decodedToken = jwt.verify(token, JWT_ACCESS_SECRET);
+    userData = token ? decodedToken : {isLogged: false};
+
+  } catch (err) {
+    userData = {isLogged: false};
+  }
+
+  const {id} = req.params;
+  let {page = 1} = req.query;
+  page = parseInt(page, 10);
+
+  const limit = ARTICLES_PER_PAGE;
+  const offset = (page - 1) * ARTICLES_PER_PAGE;
+
+  const [{allArticlesSum, articlesOfPage}, categories] = await Promise.all([
+    api.getArticlesByCategory({id, limit, offset, comments: true}),
+    api.getCategories({sumUpEquals: true})
+  ]);
+
+  const totalPages = Math.ceil(allArticlesSum / ARTICLES_PER_PAGE);
+
+  res.render(`./publications-by-category`, {
+    page,
+    totalPages,
+    dayjs,
+    articles: articlesOfPage,
+    activeCategory: Number(id),
+    categories,
+    isLogged: userData.isLogged,
+    userAvatar: userData.userAvatar || `none`,
+    userName: userData.userName || `none`,
+    userSurname: userData.userSurname || `none`,
+  });
+});
 
 articlesRouter.get(`/add`, authenticateJwt, async (req, res) => {
   const token = req.cookies[`authorization`];

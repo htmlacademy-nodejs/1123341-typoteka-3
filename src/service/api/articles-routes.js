@@ -27,6 +27,23 @@ module.exports = (app, articlesService, commentService) => {
       .json(articles);
   });
 
+  route.get(`/category/:CategoryId`, async (req, res) => {
+    const {CategoryId} = req.params;
+    const {offset, limit, comments} = req.query;
+    const articles = await articlesService.findAll(comments, {CategoryId, offset, limit});
+
+    if (articles) {
+      res
+        .status(HttpCode.OK)
+        .json(articles);
+
+    } else {
+      res
+        .status(HttpCode.NOT_FOUND)
+        .send(`Not found articles belonging to category with id:${CategoryId}`);
+    }
+  });
+
   route.get(`/:articleId`, async (req, res) => {
     const {articleId} = req.params;
     const {comments} = req.query;
