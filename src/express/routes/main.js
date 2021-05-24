@@ -7,6 +7,7 @@ const mainRouter = new Router();
 const api = require(`../api`).getAPI();
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
 const authenticateJwtV2 = require(`../../service/validators/authenticate-jwt-v2`);
+const tokenRelevance = require(`../../service/validators/token-relevance`);
 
 const {ARTICLES_PER_PAGE} = require(`../../constants`);
 const {JWT_ACCESS_SECRET} = process.env;
@@ -44,20 +45,35 @@ mainRouter.get(`/`, authenticateJwtV2, async (req, res) => {
   });
 });
 
-mainRouter.get(`/search`, async (req, res) => {
+mainRouter.get(`/search`, tokenRelevance, async (req, res) => {
+  const {userData} = req;
+
   try {
     const {search} = req.query;
     const articals = await api.search(search);
-    res.render(`search/search-2`, {
+    res.render(`search`, {
       articals,
       searchText: search,
-      dayjs
+      dayjs,
+      isLogged: userData.isLogged,
+      userAvatar: userData.userAvatar,
+      userName: userData.userName,
+      userSurname: userData.userSurname,
     });
 
   } catch (error) {
-    res.render(`search/search-2`, {
-      articals: [],
-      dayjs
+    // когда перехожу на страницу поиска
+    console.log(error.config.params.query !== undefined);
+    const articals = error.config.params.query === undefined
+      ? undefined
+      : [];
+
+    res.render(`search`, {
+      articals,
+      isLogged: userData.isLogged,
+      userAvatar: userData.userAvatar,
+      userName: userData.userName,
+      userSurname: userData.userSurname,
     });
   }
 });

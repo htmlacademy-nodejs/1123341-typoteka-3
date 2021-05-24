@@ -1,0 +1,30 @@
+extends layout.pug
+
+block content
+  .wrapper-color
+    include partials/header.pug
+    main
+      section.search-page
+        .search-page__wrapper
+          h1 Поиск
+          if articals
+            .search.search-page__form
+              form(action='/search' method='get')
+                label
+                  input(type='text' name='search' placeholder='Что ищем?' value=searchText)
+                button.search__button.button.button--transparent(type='submit') Найти
+              if articals.length !== 0
+                each article in articals
+                  .search__result
+                    time.search__date(datetime=formatDate(dayjs, article.createdAt, `tagFormat`)) #{formatDate(dayjs, article.createdAt, `visualFormat`)}
+                    a.search__link(href=`/articles/${article.id}`)
+                      | #{article.title}
+            if articals.length === 0
+              p.search-page__empty Ничего не нашлось
+          else
+            .search.search-page__form
+              form(action='/search' method='get')
+                label
+                  input(type='text' name='search' placeholder='Что ищем?')
+                button.search__button.button.button--transparent(type='submit') Найти
+    include partials/footer.pug
