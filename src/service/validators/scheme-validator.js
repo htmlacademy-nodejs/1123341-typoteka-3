@@ -6,14 +6,10 @@ module.exports = (schema) => (
   async (req, res, next) => {
     const {body} = req;
 
-    console.log(`бобик`);
-    console.log(body);
-
     try {
       await schema.validateAsync(body, {abortEarly: false});
 
     } catch (err) {
-      console.log(`Каракурт`);
       const {details} = err;
 
       res

@@ -38,4 +38,8 @@ block content
                   .form__field.form__field--publication-text
                     label
                       textarea(rows='1' name=`full-text` placeholder='Полный текст публикации')
+                if errorsMessages
+                  ul
+                    each error in errorsMessages
+                      li #{error}
         .modal__overlay

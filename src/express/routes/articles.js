@@ -47,7 +47,19 @@ articlesRouter.post(`/add`, tokenRelevance, upload.single(`avatar`), async (req,
     res.redirect(`/my`);
 
   } catch (error) {
-    res.redirect(`back`);
+    let {data: details} = error.response;
+    details = Array.isArray(details) ? details : [details];
+
+    res.render(`./admin/admin-add-new-post-empty`, {
+      dayjs,
+      isLogged: userData.isLogged,
+      userAvatar: userData.userAvatar,
+      userName: userData.userName,
+      userSurname: userData.userSurname,
+      errorsMessages: details.map((errorDescription) => errorDescription.message),
+    });
+
+    return;
   }
 });
 

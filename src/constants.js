@@ -104,6 +104,12 @@ const RegisterMessage = {
   USESURNAME_INCORRECT_FILLING: `Поле "Фамилия" должно содержать только буквы`
 };
 
+const articleMessage = {
+  REQUIRED_FIELD: `Не оставляйте это поле пустым`,
+  MIN_LENGTH_FAILED: `Напишите не менее 30 символов`,
+  MAX_LENGTH_FAILED: `Вы превысили допустимый лимит`
+};
+
 const commentateMessage = {
   REQUIRED_FIELD: `Сообщение не может быть пустым, напишите что-нибудь!`,
   MIN_LENGTH_FAILED: `Напишите не менее 20 символов`
@@ -137,6 +143,7 @@ module.exports = {
   LoginMessage,
   MIN_PASSWORD_LENGTH,
   MAX_PASSWORD_LENGTH,
-  commentateMessage
+  commentateMessage,
+  articleMessage
 };
 
