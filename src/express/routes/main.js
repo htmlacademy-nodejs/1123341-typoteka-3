@@ -1,20 +1,16 @@
 'use strict';
 
 const dayjs = require(`dayjs`);
-const jwt = require(`jsonwebtoken`);
 const {Router} = require(`express`);
 const mainRouter = new Router();
 const api = require(`../api`).getAPI();
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
-const authenticateJwtV2 = require(`../../service/validators/authenticate-jwt-v2`);
 const tokenRelevance = require(`../../service/validators/token-relevance`);
 
 const {ARTICLES_PER_PAGE} = require(`../../constants`);
-const {JWT_ACCESS_SECRET} = process.env;
 
-mainRouter.get(`/`, authenticateJwtV2, async (req, res) => {
-  const token = req.cookies[`authorization`];
-  let userData = token ? jwt.verify(token, JWT_ACCESS_SECRET) : {isLogged: false};
+mainRouter.get(`/`, tokenRelevance, async (req, res) => {
+  const {userData} = req;
 
   let {page = 1} = req.query;
   page = parseInt(page, 10);
@@ -63,9 +59,7 @@ mainRouter.get(`/search`, tokenRelevance, async (req, res) => {
 
   } catch (error) {
     // когда перехожу на страницу поиска
-    const articals = error.config.params.query === undefined
-      ? undefined
-      : [];
+    const articals = error.config.params.query === undefined ? undefined : [];
 
     res.render(`search`, {
       articals,

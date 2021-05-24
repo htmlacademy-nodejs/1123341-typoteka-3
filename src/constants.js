@@ -31,7 +31,7 @@ const HttpCode = {
 
 const API_PREFIX = `/api`;
 
-const picsNames = [`forest`, `sea`, `skyscraper`, `sea-fullsize`];
+const picsNames = [`forest@1x.jpg`, `sea@1x.jpg`, `skyscraper@1x.jpg`, `sea-fullsize@1x.jpg`];
 
 const categories = new Map([
   [`Деревья`, `trees`],
