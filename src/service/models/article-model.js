@@ -13,10 +13,8 @@ const define = (sequelize) => Article.init({
     type: DataTypes.TEXT,
     allowNull: false
   },
-  fullText: {
-    type: DataTypes.TEXT,
-    allowNull: false
-  },
+  fullText: DataTypes.TEXT
+
 }, {
   sequelize,
   modelName: `Article`,

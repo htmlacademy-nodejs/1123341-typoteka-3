@@ -14,8 +14,7 @@ module.exports = Joi.object({
     .required(),
 
   fullText: Joi.string()
-    .min(1)
-    .max(255)
+    .empty(``)
     .required(),
 
   picture: Joi.string()

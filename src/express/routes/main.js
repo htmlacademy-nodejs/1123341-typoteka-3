@@ -63,7 +63,6 @@ mainRouter.get(`/search`, tokenRelevance, async (req, res) => {
 
   } catch (error) {
     // когда перехожу на страницу поиска
-    console.log(error.config.params.query !== undefined);
     const articals = error.config.params.query === undefined
       ? undefined
       : [];

@@ -8,6 +8,7 @@ const {nanoid} = require(`nanoid`);
 const path = require(`path`);
 const {compareDate} = require(`../../utils`);
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
+const tokenRelevance = require(`../../service/validators/token-relevance`);
 
 const UPLOAD_DIR = path.resolve(__dirname, `../upload/img/`);
 const {ARTICLES_PER_PAGE} = require(`../../constants`);
@@ -27,18 +28,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-articlesRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
-  const {body, file} = req;
-  const token = req.cookies[`authorization`];
-  let userData = token ? jwt.verify(token, JWT_ACCESS_SECRET) : {isLogged: false};
+articlesRouter.post(`/add`, tokenRelevance, upload.single(`avatar`), async (req, res) => {
+  const {body, file, userData} = req;
+  const fullText = body[`full-text`] ? body[`full-text`] : ``;
+  const picture = file ? file.filename : ``;
 
   const articleData = {
-    picture: file ? file.filename : ``,
+    userId: userData.id,
+    picture,
     title: body.title,
     announce: body.announce,
-    fullText: body[`full-text`],
+    fullText,
     categories: body.category || [`2`, `3`], // ?????? неправильно 100%
-    userId: userData.id
   };
 
   try {
@@ -90,17 +91,16 @@ articlesRouter.get(`/category/:id`, async (req, res) => {
   });
 });
 
-articlesRouter.get(`/add`, authenticateJwt, async (req, res) => {
-  const token = req.cookies[`authorization`];
-  let userData = token ? jwt.verify(token, JWT_ACCESS_SECRET) : {isLogged: false};
-  // const categories = await api.getCategories();
+articlesRouter.get(`/add`, [tokenRelevance, authenticateJwt], async (req, res) => {
+  const {userData} = req;
+  // const categories = await api.getCategories(); должны быть
 
   res.render(`./admin/admin-add-new-post-empty`, {
     dayjs,
     isLogged: userData.isLogged,
-    userAvatar: userData.userAvatar || `none`,
-    userName: userData.userName || `none`,
-    userSurname: userData.userSurname || `none`,
+    userAvatar: userData.userAvatar,
+    userName: userData.userName,
+    userSurname: userData.userSurname,
   });
 });
 
@@ -125,7 +125,6 @@ articlesRouter.get(`/:id`, async (req, res) => {
   } catch (err) {
     userData = {isLogged: false};
   }
-
 
   const {id} = req.params;
   const [{article, allUsers}, categories] = await Promise.all([
