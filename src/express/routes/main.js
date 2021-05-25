@@ -32,9 +32,9 @@ mainRouter.get(`/`, tokenRelevance, async (req, res) => {
     categories,
     dayjs,
     isLogged: userData.isLogged,
-    userAvatar: userData.userAvatar || `none`,
-    userName: userData.userName || `none`,
-    userSurname: userData.userSurname || `none`,
+    userAvatar: userData.userAvatar,
+    userName: userData.userName,
+    userSurname: userData.userSurname,
     lastComments,
     popularArticles,
     allUsers

@@ -72,10 +72,11 @@ module.exports = (app, articlesService, commentService) => {
   route.put(`/:articleId`, schemeValidator(articleScheme), async (req, res) => {
     const {articleId} = req.params;
     const existArticle = await articlesService.update(articleId, req.body);
+
     if (existArticle) {
       res
         .status(HttpCode.OK)
-        .send(`Updated`);
+        .json(existArticle);
 
     } else {
       res

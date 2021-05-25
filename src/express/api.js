@@ -45,6 +45,13 @@ class API {
     });
   }
 
+  async updateArticle({articleId, articleData}) {
+    return await this._load(`/articles/${articleId}`, {
+      method: `PUT`,
+      data: articleData
+    });
+  }
+
   async createUser(data) {
     return await this._load(`/user`, {
       method: `POST`,
