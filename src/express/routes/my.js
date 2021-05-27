@@ -1,25 +1,46 @@
 'use strict';
 
 const dayjs = require(`dayjs`);
-const jwt = require(`jsonwebtoken`);
 const {Router} = require(`express`);
 const {compareDate} = require(`../../utils`);
 const myRouter = new Router();
 const api = require(`../api`).getAPI();
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
+const tokenRelevance = require(`../../service/validators/token-relevance`);
+const creatorValidator = require(`../../service/validators/creator-validator`);
 
-const {JWT_ACCESS_SECRET} = process.env;
+myRouter.get(`/`, [tokenRelevance, authenticateJwt], async (req, res) => {
+  const {userData} = req;
+  const {id: userId} = req.userData;
 
-myRouter.get(`/`, authenticateJwt, async (req, res) => {
-  let articles = await api.getArticles();
+  let articles = await api.getArticles({userId});
   articles = articles.sort(compareDate);
-  res.render(`./admin/admin-publications`, {articles, dayjs});
+
+  res.render(`./admin/admin-publications`, {
+    articles,
+    dayjs,
+    isLogged: userData.isLogged,
+    userAvatar: userData.userAvatar,
+    userName: userData.userName,
+    userSurname: userData.userSurname
+  });
 });
 
-myRouter.get(`/comments`, authenticateJwt, async (req, res) => {
-  const token = req.cookies[`authorization`];
-  const userData = jwt.verify(token, JWT_ACCESS_SECRET);
+myRouter.get(`/articles/delete/:id`, async (req, res) => {
+  const {id: articleId} = req.params;
 
+  try {
+    await api.deleteArticle({articleId});
+    res.redirect(`/my`);
+
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+});
+
+myRouter.get(`/comments`, [tokenRelevance, authenticateJwt, creatorValidator(api)], async (req, res) => {
+  const {userData} = req;
   const articles = await api.getArticles({comments: true});
   const sortedComments = articles
     .flatMap((article) => article.comments)

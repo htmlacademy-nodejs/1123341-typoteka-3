@@ -2,15 +2,7 @@ extends ../layout.pug
 
 block content
   .wrapper.wrapper--nobackground
-    header.header
-      a.header__logo.logo(href='#')
-        img.logo__image(src='/img/icons/logo-image-only.svg' alt='логотип Тайпотеки')
-        span.logo__name Типотека
-      button.button.button--colored.header__button-new Новая запись
-      .header__dropdown
-        a.button.button--burger.header__burger(href='#') Открыть меню
-        include ../partials/header-navigation.pug
-      a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
+    include ../partials/header.pug
     main.main-page.main-page--padding
       section.main-page__notes.notes
         h1.notes__title Мои записи
@@ -19,6 +11,6 @@ block content
             li.notes__list-item
                 time.notes__item-time(datetime=formatDate(dayjs, article.createdAt, `tagFormat`)) #{formatDate(dayjs, article.createdAt, `visualFormat`)}
                 a.notes__item-text(href='#') #{article.fullText}
-                button.notes__button.button.button--close-item(type='button')
+                button.notes__button.button.button--close-item(onclick=`window.location.href='/my/articles/delete/${article.id}'` type='button')
                   span.visually-hidden Закрыть строку списка
     include ../partials/footer.pug

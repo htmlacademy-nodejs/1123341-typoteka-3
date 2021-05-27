@@ -18,8 +18,8 @@ class API {
     return response.data;
   }
 
-  async getArticles({offset, limit, comments} = {}) {
-    return await this._load(`/articles`, {params: {offset, limit, comments}});
+  async getArticles({offset, limit, comments, userId} = {}) {
+    return await this._load(`/articles`, {params: {offset, limit, comments, userId}});
   }
 
   async getArticle({id, comments} = {}) {
@@ -36,6 +36,12 @@ class API {
 
   async getCategories({sumUpEquals} = {}) {
     return await this._load(`/categories`, {params: {sumUpEquals}});
+  }
+
+  async deleteArticle({articleId} = {}) {
+    return await this._load(`/articles/${articleId}`, {
+      method: `DELETE`
+    });
   }
 
   async createArticle(data) {

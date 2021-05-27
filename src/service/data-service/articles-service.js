@@ -29,13 +29,17 @@ class ArticleService {
     return !!deletedRows;
   }
 
-  async findAll(needComments, {CategoryId, limit, offset} = {}) {
-    const models = needComments
+  async findAll(needComments, {CategoryId, limit, offset, userId} = {}) {
+    const include = needComments
       ? [Aliase.CATEGORIES, Aliase.COMMENTS]
       : [Aliase.CATEGORIES];
 
-    if (!CategoryId) {
-      const articles = await this._Article.findAll({include: models});
+    if (!CategoryId && !userId) {
+      const articles = await this._Article.findAll({include});
+      return articles.map((item) => item.get());
+
+    } else if (userId) {
+      const articles = await this._Article.findAll({where: {userId}});
       return articles.map((item) => item.get());
 
     } else {
@@ -47,7 +51,7 @@ class ArticleService {
             [Op.in]: identifiers
           }
         },
-        include: [Aliase.CATEGORIES, Aliase.COMMENTS],
+        include,
         distinct: true,
         limit,
         offset,
