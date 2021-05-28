@@ -5,11 +5,11 @@ const {HttpCode} = require(`../../constants`);
 
 module.exports = (app, service) => {
   const route = new Router();
-  app.use(`/categories`, route);
+  app.use(`/`, route);
 
-  route.get(`/`, async (req, res) => {
-    const {sumUpEquals} = req.query;
-    const categories = await service.findAll(sumUpEquals);
+  route.get(`/categories`, async (req, res) => {
+    const {sumUpEquals, userId} = req.query;
+    const categories = await service.findAll({sumUpEquals, userId});
 
     res
       .status(HttpCode.OK)

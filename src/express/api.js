@@ -34,8 +34,8 @@ class API {
     return await this._load(`/search`, {params: {query}});
   }
 
-  async getCategories({sumUpEquals} = {}) {
-    return await this._load(`/categories`, {params: {sumUpEquals}});
+  async getCategories({sumUpEquals, userId} = {}) {
+    return await this._load(`/categories`, {params: {sumUpEquals, userId}});
   }
 
   async deleteArticle({articleId} = {}) {

@@ -26,6 +26,19 @@ myRouter.get(`/`, [tokenRelevance, authenticateJwt], async (req, res) => {
   });
 });
 
+myRouter.get(`/categories`, [tokenRelevance, authenticateJwt], async (req, res) => {
+  const {userData} = req;
+  const categories = await api.getCategories({userId: userData.id});
+
+  res.render(`./admin/admin-categories`, {
+    categories,
+    isLogged: userData.isLogged,
+    userAvatar: userData.userAvatar,
+    userName: userData.userName,
+    userSurname: userData.userSurname
+  });
+});
+
 myRouter.get(`/articles/delete/:id`, async (req, res) => {
   const {id: articleId} = req.params;
 
