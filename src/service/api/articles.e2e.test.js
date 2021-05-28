@@ -154,10 +154,10 @@ describe(`API returns an article with given id`, () => {
 
 describe(`API creates an article if data is valid`, () => {
   const newArticle = {
-    title: `Дам погладить котика`,
-    picture: `pig`,
-    announce: `Иногда котики умываются после глажки`,
-    fullText: `Это мой кот. Зовут Винки!`,
+    title: `Дам погладить котика. Его зовут Анаконда. Это странное имя, но мне нравится`,
+    picture: ``,
+    announce: `Иногда котики умываются после глажки. Они прячутся от своих хозяев чтобы не обидеть`,
+    fullText: ``,
     categories: [`1`, `2`],
     userId: 3
   };
@@ -210,10 +210,10 @@ describe(`API refuses to create an article if data is invalid`, () => {
 
 describe(`API changes existent article`, () => {
   const newArticle = {
-    title: `Дам погладить котика`,
-    picture: `wrestling`,
-    announce: `Иногда котики умываются после глажки`,
-    fullText: `Это мой кот. Зовут Винки!`,
+    title: `Дам погладить котика. Это мой кот. Зовут Винки! Мяу мяу мяу гав гав`,
+    picture: ``,
+    announce: `Иногда котики умываются после глажки. Дада дада дада дада!!!`,
+    fullText: ``,
     categories: [`1`, `3`],
     userId: 3
   };
@@ -231,17 +231,17 @@ describe(`API changes existent article`, () => {
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
   test(`Article is really changed`, () => request(app)
     .get(`/articles/3`)
-    .expect((res) => expect(res.body.article.title).toBe(`Дам погладить котика`))
+    .expect((res) => expect(res.body.article.title).toBe(`Дам погладить котика. Это мой кот. Зовут Винки! Мяу мяу мяу гав гав`))
   );
 });
 
 test(`API returns status code 404 when trying to change non-existent article`, async () => {
   const app = await createAPI();
   const validArticle = {
-    title: `Дам погладить котика`,
-    picture: `wrestling`,
-    announce: `Иногда котики умываются после глажки`,
-    fullText: `Это мой кот. Зовут Винки!`,
+    title: `Дам погладить котика. Но потом верни, пожалуйста, а то я его очень люблю`,
+    picture: ``,
+    announce: `Иногда котики умываются после глажки. Они делают это тайно и с особым удовольствием`,
+    fullText: ``,
     categories: [`1`, `3`],
     userId: 3
   };
