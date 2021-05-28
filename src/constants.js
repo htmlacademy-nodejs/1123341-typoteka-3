@@ -115,6 +115,12 @@ const commentateMessage = {
   MIN_LENGTH_FAILED: `Напишите не менее 20 символов`
 };
 
+const categoryMessage = {
+  REQUIRED_FIELD: `Невозможно создать категорию без названия`,
+  MIN_LENGTH_FAILED: `Напишите не менее 5 символов`,
+  MAX_LENGTH_FAILED: `Напишите не более 30 символов`
+};
+
 const LoginMessage = {
   USER_NOT_EXISTS: `Пользователь с таким email не зарегистрирован`,
   WRONG_PASSWORD: `Неправильно введён пароль`,
@@ -144,6 +150,7 @@ module.exports = {
   MIN_PASSWORD_LENGTH,
   MAX_PASSWORD_LENGTH,
   commentateMessage,
-  articleMessage
+  articleMessage,
+  categoryMessage
 };
 

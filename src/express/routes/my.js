@@ -2,12 +2,15 @@
 
 const dayjs = require(`dayjs`);
 const {Router} = require(`express`);
+const multer = require(`multer`);
 const {compareDate} = require(`../../utils`);
 const myRouter = new Router();
 const api = require(`../api`).getAPI();
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
 const tokenRelevance = require(`../../service/validators/token-relevance`);
 const creatorValidator = require(`../../service/validators/creator-validator`);
+
+const upload = multer();
 
 myRouter.get(`/`, [tokenRelevance, authenticateJwt], async (req, res) => {
   const {userData} = req;
@@ -37,6 +40,29 @@ myRouter.get(`/categories`, [tokenRelevance, authenticateJwt], async (req, res) 
     userName: userData.userName,
     userSurname: userData.userSurname
   });
+});
+
+myRouter.post(`/categories/add`, tokenRelevance, upload.none(), async (req, res) => {
+  const {body, userData} = req;
+
+  try {
+    await api.createCategory({userId: userData.id, name: body.category});
+    res.redirect(`/my/categories`);
+
+  } catch (error) {
+    const categories = await api.getCategories({userId: userData.id});
+    let {data: details} = error.response;
+    details = Array.isArray(details) ? details : [details];
+
+    res.render(`./admin/admin-categories`, {
+      errorsMessages: details.map((errorDescription) => errorDescription.message),
+      categories,
+      isLogged: userData.isLogged,
+      userAvatar: userData.userAvatar,
+      userName: userData.userName,
+      userSurname: userData.userSurname
+    });
+  }
 });
 
 myRouter.get(`/articles/delete/:id`, async (req, res) => {

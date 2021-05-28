@@ -144,7 +144,6 @@ articlesRouter.post(`/edit/:id`, tokenRelevance, upload.single(`avatar`), async 
     res.redirect(`/my`);
 
   } catch (error) {
-    console.log(error.response);
     let {data: details} = error.response;
     details = Array.isArray(details) ? details : [details];
 

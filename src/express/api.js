@@ -65,6 +65,14 @@ class API {
     });
   }
 
+  async createCategory({userId, name}) {
+    return await this._load(`/categories`, {
+      method: `POST`,
+      data: {name},
+      params: {userId}
+    });
+  }
+
   async createComment(articleId, userId, data) {
     return await this._load(`/articles/${articleId}/comments`, {
       method: `POST`,

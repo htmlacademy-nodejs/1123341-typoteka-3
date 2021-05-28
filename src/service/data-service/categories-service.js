@@ -10,6 +10,11 @@ class CategoriesService {
     this._ArticleCategory = sequelize.models.ArticleCategory;
   }
 
+  async add(formData) {
+    const newCategory = await this._Category.create(formData);
+    return newCategory.get();
+  }
+
   async findAll({sumUpEquals, userId}) {
     if (userId) {
       const articles = await this._Article.findAll({where: {userId}});
