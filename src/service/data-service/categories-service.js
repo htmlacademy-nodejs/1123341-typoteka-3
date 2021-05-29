@@ -40,6 +40,11 @@ class CategoriesService {
     return articles.map((article) => article.get());
   }
 
+  async findByName(name) {
+    const foundCategory = await this._Category.findOne({where: {name}});
+    return foundCategory;
+  }
+
   async findAll({sumUpEquals, userId}) {
     if (userId) {
       const articles = await this._Article.findAll({where: {userId}});

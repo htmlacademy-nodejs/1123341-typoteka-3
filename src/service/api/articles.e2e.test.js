@@ -322,7 +322,7 @@ describe(`API creates a comment if data is valid`, () => {
   beforeAll(async () => {
     app = await createAPI();
     response = await request(app)
-      .post(`/articles/2/comments`)
+      .post(`/articles/2/comments?userId=2`)
       .send(newComment);
   });
 
