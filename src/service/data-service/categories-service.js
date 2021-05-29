@@ -15,6 +15,14 @@ class CategoriesService {
     return newCategory.get();
   }
 
+  async update(id, category) {
+    const [affectedRows] = await this._Category.update(category, {
+      where: {id}
+    });
+
+    return !!affectedRows;
+  }
+
   async findAll({sumUpEquals, userId}) {
     if (userId) {
       const articles = await this._Article.findAll({where: {userId}});

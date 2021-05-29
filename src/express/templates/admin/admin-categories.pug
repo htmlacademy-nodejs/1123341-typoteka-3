@@ -19,7 +19,7 @@ block content
         ul.category__list
           each category in categories
             li.category__list-item
-              form(action='#' method='POST')
+              form(action=`/my/categories/edit/${category.id}` method='POST' enctype="multipart/form-data" autocomplete="off")
                 input(id=`modify-form-category-${category.id}` type='text' name='category' value=category.name)
                 label(for=`modify-form-category-${category.id}`)
                   span.visually-hidden Редактировать категорию

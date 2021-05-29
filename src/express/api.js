@@ -58,6 +58,13 @@ class API {
     });
   }
 
+  async updateCategory({categoryId, name}) {
+    return await this._load(`/categories/${categoryId}`, {
+      method: `PUT`,
+      data: {name}
+    });
+  }
+
   async createUser(data) {
     return await this._load(`/user`, {
       method: `POST`,

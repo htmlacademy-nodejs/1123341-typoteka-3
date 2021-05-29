@@ -27,4 +27,13 @@ module.exports = (app, service) => {
       .status(HttpCode.CREATED)
       .json(newCategory);
   });
+
+  route.put(`/:categoryId`, schemeValidator(categoryScheme), async (req, res) => {
+    const {categoryId} = req.params;
+    const category = await service.update(categoryId, req.body);
+
+    return res
+        .status(HttpCode.OK)
+        .json(category);
+  });
 };

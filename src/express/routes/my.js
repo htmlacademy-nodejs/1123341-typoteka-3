@@ -42,6 +42,30 @@ myRouter.get(`/categories`, [tokenRelevance, authenticateJwt], async (req, res) 
   });
 });
 
+myRouter.post(`/categories/edit/:categoryId`, tokenRelevance, upload.none(), async (req, res) => {
+  const {body, userData} = req;
+  const {categoryId} = req.params;
+
+  try {
+    await api.updateCategory({categoryId, name: body.category});
+    res.redirect(`/my/categories`);
+
+  } catch (error) {
+    const categories = await api.getCategories({userId: userData.id});
+    let {data: details} = error.response;
+    details = Array.isArray(details) ? details : [details];
+
+    res.render(`./admin/admin-categories`, {
+      errorsMessages: details.map((errorDescription) => errorDescription.message),
+      categories,
+      isLogged: userData.isLogged,
+      userAvatar: userData.userAvatar,
+      userName: userData.userName,
+      userSurname: userData.userSurname
+    });
+  }
+});
+
 myRouter.post(`/categories/add`, tokenRelevance, upload.none(), async (req, res) => {
   const {body, userData} = req;
 
