@@ -4,6 +4,7 @@ const {Router} = require(`express`);
 const {HttpCode} = require(`../../constants`);
 const schemeValidator = require(`../validators/scheme-validator`);
 const categoryScheme = require(`../validators/schemes/category-scheme`);
+const articlesFinder = require(`../validators/articles-finder`);
 
 module.exports = (app, service) => {
   const route = new Router();
@@ -35,5 +36,14 @@ module.exports = (app, service) => {
     return res
         .status(HttpCode.OK)
         .json(category);
+  });
+
+  route.delete(`/:categoryId`, articlesFinder(service), async (req, res) => {
+    const {categoryId} = req.params;
+    await service.drop(categoryId);
+
+    return res
+      .status(HttpCode.OK)
+      .send(`Category Deleted`);
   });
 };

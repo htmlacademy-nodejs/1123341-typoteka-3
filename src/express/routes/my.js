@@ -42,7 +42,7 @@ myRouter.get(`/categories`, [tokenRelevance, authenticateJwt], async (req, res) 
   });
 });
 
-myRouter.post(`/categories/edit/:categoryId`, tokenRelevance, upload.none(), async (req, res) => {
+myRouter.post(`/categories/edit/:categoryId`, [tokenRelevance, authenticateJwt], upload.none(), async (req, res) => {
   const {body, userData} = req;
   const {categoryId} = req.params;
 
@@ -66,7 +66,7 @@ myRouter.post(`/categories/edit/:categoryId`, tokenRelevance, upload.none(), asy
   }
 });
 
-myRouter.post(`/categories/add`, tokenRelevance, upload.none(), async (req, res) => {
+myRouter.post(`/categories/add`, [tokenRelevance, authenticateJwt], upload.none(), async (req, res) => {
   const {body, userData} = req;
 
   try {
@@ -89,7 +89,7 @@ myRouter.post(`/categories/add`, tokenRelevance, upload.none(), async (req, res)
   }
 });
 
-myRouter.get(`/articles/delete/:id`, async (req, res) => {
+myRouter.get(`/articles/delete/:id`, [tokenRelevance, authenticateJwt], async (req, res) => {
   const {id: articleId} = req.params;
 
   try {
@@ -99,6 +99,28 @@ myRouter.get(`/articles/delete/:id`, async (req, res) => {
   } catch (error) {
     console.log(error);
     return;
+  }
+});
+
+myRouter.get(`/categories/delete/:id`, [tokenRelevance, authenticateJwt], async (req, res) => {
+  const {id: categoryId} = req.params;
+  const {userData} = req;
+
+  try {
+    await api.deleteCategory({categoryId});
+    res.redirect(`/my`);
+
+  } catch (error) {
+    const categories = await api.getCategories({userId: userData.id});
+
+    res.render(`./admin/admin-categories`, {
+      errorsMessages: [error.response.data],
+      categories,
+      isLogged: userData.isLogged,
+      userAvatar: userData.userAvatar,
+      userName: userData.userName,
+      userSurname: userData.userSurname
+    });
   }
 });
 

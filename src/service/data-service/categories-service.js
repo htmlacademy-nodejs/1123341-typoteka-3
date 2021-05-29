@@ -23,6 +23,23 @@ class CategoriesService {
     return !!affectedRows;
   }
 
+  async drop(id) {
+    const deletedRows = await this._Category.destroy({
+      where: {id}
+    });
+    return !!deletedRows;
+  }
+
+  async findArticlesByCategory(CategoryId) {
+    const articles = await this._ArticleCategory.findAll({
+      where: {
+        CategoryId
+      }
+    });
+
+    return articles.map((article) => article.get());
+  }
+
   async findAll({sumUpEquals, userId}) {
     if (userId) {
       const articles = await this._Article.findAll({where: {userId}});
