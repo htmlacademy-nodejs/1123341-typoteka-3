@@ -31,7 +31,7 @@ myRouter.get(`/`, [tokenRelevance, authenticateJwt], async (req, res) => {
 
 myRouter.get(`/categories`, [tokenRelevance, authenticateJwt], async (req, res) => {
   const {userData} = req;
-  const categories = await api.getCategories({userId: userData.id});
+  const categories = await api.getCategories();
 
   res.render(`./admin/admin-categories`, {
     categories,
@@ -51,7 +51,7 @@ myRouter.post(`/categories/edit/:categoryId`, [tokenRelevance, authenticateJwt],
     res.redirect(`/my/categories`);
 
   } catch (error) {
-    const categories = await api.getCategories({userId: userData.id});
+    const categories = await api.getCategories();
     let {data: details} = error.response;
     details = Array.isArray(details) ? details : [details];
 
@@ -74,7 +74,7 @@ myRouter.post(`/categories/add`, [tokenRelevance, authenticateJwt], upload.none(
     res.redirect(`/my/categories`);
 
   } catch (error) {
-    const categories = await api.getCategories({userId: userData.id});
+    const categories = await api.getCategories();
     let {data: details} = error.response;
     details = Array.isArray(details) ? details : [details];
 
@@ -108,7 +108,7 @@ myRouter.get(`/categories/delete/:id`, [tokenRelevance, authenticateJwt], async 
 
   try {
     await api.deleteCategory({categoryId});
-    res.redirect(`/my`);
+    res.redirect(`/my/categories`);
 
   } catch (error) {
     const categories = await api.getCategories({userId: userData.id});
