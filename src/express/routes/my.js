@@ -8,7 +8,6 @@ const myRouter = new Router();
 const api = require(`../api`).getAPI();
 const authenticateJwt = require(`../../service/validators/authenticate-jwt`);
 const tokenRelevance = require(`../../service/validators/token-relevance`);
-const creatorValidator = require(`../../service/validators/creator-validator`);
 
 const upload = multer();
 
@@ -124,12 +123,23 @@ myRouter.get(`/categories/delete/:id`, [tokenRelevance, authenticateJwt], async 
   }
 });
 
-myRouter.get(`/comments`, [tokenRelevance, authenticateJwt, creatorValidator(api)], async (req, res) => {
+myRouter.get(`/comments/delete/:id`, [tokenRelevance, authenticateJwt], async (req, res) => {
+  const {id: commentId} = req.params;
+
+  try {
+    await api.deleteComment({commentId});
+    res.redirect(`/my/comments`);
+
+  } catch (error) {
+    console.log(error);
+    return;
+  }
+});
+
+myRouter.get(`/comments`, [tokenRelevance, authenticateJwt], async (req, res) => {
   const {userData} = req;
-  const articles = await api.getArticles({comments: true});
-  const sortedComments = articles
-    .flatMap((article) => article.comments)
-    .sort(compareDate);
+  const comments = await api.getUsersComments(userData.id);
+  const sortedComments = comments.sort(compareDate);
 
   res.render(`./admin/admin-comments`, {
     dayjs,

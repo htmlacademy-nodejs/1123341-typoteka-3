@@ -10,11 +10,11 @@ block content
           each comment in sortedComments
             li.publication__list-item
               .publication__header
-                img.publication__list-image(src='/img/avatar-small-2.png' width='20' height='20' alt='Аватар пользователя')
-                b.publication__list-name Александр Петров
+                img.publication__list-image(src=`/img/${userAvatar}` width='20' height='20' alt='Аватар пользователя')
+                b.publication__list-name #{userName} #{userSurname}
                 time.publication__item-time(datetime=`${formatDate(dayjs, comment.createdAt, `tagFormat`)}`) #{formatDate(dayjs, comment.createdAt, `visualFormat`)}
               a.publication__item-text(href='#') #{comment.text}
               p.publication__text-strong #{comment.text}
-              button.publication__button.button.button--close-item(type='button')
+              button.publication__button.button.button--close-item(onclick=`window.location.href='/my/comments/delete/${comment.id}'` type='button')
                 span.visually-hidden Закрыть строку списка
     include ../partials/footer.pug

@@ -17,19 +17,24 @@ class CommentService {
   }
 
   async drop(id) {
-    const changedComments = await this._Comment.destroy({
+    const deletedComments = await this._Comment.destroy({
       where: {id}
     });
 
-    return !!changedComments;
+    return !!deletedComments;
   }
 
-  async findAll(articleId) {
-    const comments = await this._Comment
-      .findAll({
-        where: {articleId},
-        raw: true
-      });
+  async findAll({articleId, userId}) {
+    let comments = null;
+
+    if (articleId) {
+      comments = await this._Comment.findAll({where: {articleId}, raw: true});
+    } else if (userId) {
+      comments = await this._Comment.findAll({where: {userId}, raw: true});
+    } else {
+      comments = await this._Comment.findAll();
+      return comments.map((item) => item.get());
+    }
 
     return comments;
   }

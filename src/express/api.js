@@ -30,6 +30,10 @@ class API {
     return await this._load(`/articles/category/${id}`, {params: {offset, limit, comments}});
   }
 
+  async getUsersComments(userId) {
+    return await this._load(`/articles/my/${userId}/comments`);
+  }
+
   async search(query) {
     return await this._load(`/search`, {params: {query}});
   }
@@ -46,6 +50,12 @@ class API {
 
   async deleteCategory({categoryId} = {}) {
     return await this._load(`/categories/${categoryId}`, {
+      method: `DELETE`
+    });
+  }
+
+  async deleteComment({commentId} = {}) {
+    return await this._load(`/articles/comments/${commentId}`, {
       method: `DELETE`
     });
   }

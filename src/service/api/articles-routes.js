@@ -88,6 +88,15 @@ module.exports = (app, articlesService, commentService) => {
     }
   });
 
+  route.delete(`/comments/:commentId`, async (req, res) => {
+    const {commentId} = req.params;
+    await commentService.drop(commentId);
+
+    res
+      .status(HttpCode.OK)
+      .send(`Article Deleted`);
+  });
+
   route.delete(`/:articleId`, async (req, res) => {
     const {articleId} = req.params;
     const deletedArticle = await articlesService.drop(articleId);
@@ -105,7 +114,15 @@ module.exports = (app, articlesService, commentService) => {
 
   route.get(`/:articleId/comments`, articleExistence(articlesService), async (req, res) => {
     const {articleId} = req.params;
-    const comments = await commentService.findAll(articleId);
+    const comments = await commentService.findAll({articleId});
+    res
+      .status(HttpCode.OK)
+      .json(comments);
+  });
+
+  route.get(`/my/:userId/comments`, async (req, res) => {
+    const {userId} = req.params;
+    const comments = await commentService.findAll({userId});
     res
       .status(HttpCode.OK)
       .json(comments);
