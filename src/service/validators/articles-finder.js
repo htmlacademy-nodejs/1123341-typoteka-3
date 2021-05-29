@@ -8,8 +8,8 @@ module.exports = (service) => async (req, res, next) => {
 
   if (articles.length !== 0) {
     res
-    .status(HttpCode.BAD_REQUEST)
-    .send(`We can't delete this category yet. We use it now`);
+      .status(HttpCode.BAD_REQUEST)
+      .send(`We can't delete this category yet. We use it now`);
 
   } else {
     next();

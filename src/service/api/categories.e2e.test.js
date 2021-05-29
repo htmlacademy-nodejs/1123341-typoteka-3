@@ -44,7 +44,7 @@ const mockArticles = [
     "title": `Как перестать беспокоиться и начать жить`,
     "announce": `Золотое сечение — соотношение двух величин, гармоническая пропорция.`,
     "fullText": `Золотое сечение — соотношение двух величин, гармоническая пропорция.   Освоить вёрстку несложно. Возьмите книгу новую книгу и закрепите все упражнения на практике.`,
-    "categories": [`Разное`, `Спорт`],
+    "categories": [`Разное`],
     "comments": [
       {
         "text": `Давно не пользуюсь стационарными компьютерами. Ноутбуки победили. Хочу такую же футболку :-) Это где ж такие красоты?`
@@ -129,3 +129,135 @@ describe(`API returns categories list`, () => {
         .toEqual(expect.arrayContaining([`Спорт`, `Политика`, `Программирование`, `Разное`, `Музыка`]))
   ));
 });
+
+describe(`API creates a category if data is valid`, () => {
+  let response;
+  const newCategory = {
+    name: `Детское`
+  };
+
+  beforeAll(async () => {
+    response = await request(app)
+      .post(`/categories`)
+      .send(newCategory);
+  });
+
+  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.CREATED));
+  test(`New category's name is "Детское"`, () => expect(response.body.name).toBe(`Детское`));
+  test(`Categories count are really changed`, () => request(app)
+    .get(`/categories`)
+    .expect((res) => expect(res.body.length).toBe(6))
+  );
+});
+
+describe(`API refuses to create a category, because it already exist`, () => {
+  let response;
+  const newCategory = {
+    name: `Разное`
+  };
+
+  beforeAll(async () => {
+    response = await request(app)
+      .post(`/categories`)
+      .send(newCategory);
+  });
+
+  test(`Status code 201`, () => expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));
+  test(`Error message: Категория уже существует`,
+      () => expect(response.body.message[0]).toBe(`Категория уже существует`));
+});
+
+describe(`API refuses to create a category if data is invalid`, () => {
+  const newCategoryOne = {name: `Дет`};
+  const newCategoryTwo = {name: `Детскоеееееееееееееееееееееееееееееееееееееееееееееееееее`};
+
+  test(`Status code 400`, async () => {
+    await request(app)
+      .post(`/categories`)
+      .send(newCategoryOne)
+      .expect(HttpCode.BAD_REQUEST);
+  });
+
+  test(`Status code 400`, async () => {
+    await request(app)
+      .post(`/categories`)
+      .send(newCategoryTwo)
+      .expect(HttpCode.BAD_REQUEST);
+  });
+});
+
+describe(`API changes existent category`, () => {
+  let response;
+  const newCategory = {
+    name: `Новые технологии`
+  };
+
+  beforeAll(async () => {
+    response = await request(app)
+      .put(`/categories/2`)
+      .send(newCategory);
+  });
+
+  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+});
+
+describe(`API refuses to change existent category, because name already exist`, () => {
+  let response;
+  const newCategory = {
+    name: `Политика`
+  };
+
+  beforeAll(async () => {
+    response = await request(app)
+      .put(`/categories/2`)
+      .send(newCategory);
+  });
+
+  test(`Status code 400`, () => expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));
+  test(`Error message: Категория уже существует`,
+      () => expect(response.body.message[0]).toBe(`Категория уже существует`));
+});
+
+describe(`API refuses to change a category if data is invalid`, () => {
+  const newCategoryOne = {name: `Дет`};
+  const newCategoryTwo = {name: `Детскоеееееееееееееееееееееееееееееееееееееееееееееееееее`};
+
+  test(`Status code 400`, async () => {
+    await request(app)
+      .put(`/categories/3`)
+      .send(newCategoryOne)
+      .expect(HttpCode.BAD_REQUEST);
+  });
+
+  test(`Status code 400`, async () => {
+    await request(app)
+      .put(`/categories/3`)
+      .send(newCategoryTwo)
+      .expect(HttpCode.BAD_REQUEST);
+  });
+});
+
+describe(`API refuses delete a category if some article uses it`, () => {
+  let response;
+
+  beforeAll(async () => {
+    response = await request(app)
+      .delete(`/categories/3`);
+  });
+
+  test(`Status code 400`, () => expect(response.statusCode).toBe(HttpCode.BAD_REQUEST));
+  test(`Error message: We can't delete this category yet. We use it now`,
+      () => expect(response.text).toBe(`We can't delete this category yet. We use it now`));
+});
+
+describe(`API deletes a category`, () => {
+  let response;
+
+  beforeAll(async () => {
+    response = await request(app)
+      .delete(`/categories/4`);
+  });
+
+  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+});
+
