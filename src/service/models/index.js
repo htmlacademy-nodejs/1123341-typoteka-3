@@ -19,8 +19,18 @@ const defineModels = (sequelize) => {
   User.hasOne(RefreshToken, {foreignKey: `userId`});
   RefreshToken.belongsTo(User, {foreignKey: `userId`});
 
-  Article.hasMany(Comment, {as: Aliase.COMMENTS, foreignKey: `articleId`});
-  Comment.belongsTo(Article, {foreignKey: `articleId`});
+  Article.hasMany(Comment, {
+    as: Aliase.COMMENTS,
+    foreignKey: `articleId`,
+    onDelete: `CASCADE`
+  });
+  Comment.belongsTo(Article, {foreignKey: `articleId`, onDelete: `CASCADE`});
+
+  User.hasMany(Article, {as: Aliase.ARTICLES, foreignKey: `userId`});
+  Article.belongsTo(User, {foreignKey: `userId`});
+
+  User.hasMany(Comment, {as: Aliase.COMMENTS, foreignKey: `userId`});
+  Comment.belongsTo(User, {foreignKey: `userId`});
 
   Article.belongsToMany(Category, {through: ArticleCategory, as: Aliase.CATEGORIES});
   Category.belongsToMany(Article, {through: ArticleCategory, as: Aliase.ARTICLES});

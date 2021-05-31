@@ -7,7 +7,7 @@ const initDB = require(`../lib/init-db`);
 const articlesRoutes = require(`./articles-routes`);
 const ArticlesService = require(`../data-service/articles-service`);
 const CommentsService = require(`../data-service/comments-service`);
-const {HttpCode} = require(`../../constants`);
+const {HttpCode, users} = require(`../../constants`);
 
 const mockCategories = [
   `Программирование`,
@@ -110,11 +110,9 @@ const mockArticles = [
   }
 ];
 
-const mockUsers = [];
-
 const createAPI = async () => {
   const mockDB = new Sequelize(`sqlite::memory:`, {logging: false});
-  await initDB(mockDB, mockArticles, mockCategories, mockUsers);
+  await initDB(mockDB, mockArticles, mockCategories, users);
 
   const app = express();
   app.use(express.json());
@@ -128,6 +126,8 @@ describe(`API returns a list of all articles`, () => {
 
   beforeAll(async () => {
     const app = await createAPI();
+
+    // в каждом article добавляется ключ userId(значение случайно)
     response = await request(app)
       .get(`/articles`);
   });
@@ -142,21 +142,24 @@ describe(`API returns an article with given id`, () => {
 
   beforeAll(async () => {
     const app = await createAPI();
+
+    // response выглядит {article, allUsers}
     response = await request(app)
       .get(`/articles/2`);
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
-  test(`Article's title is "Как перестать беспокоиться и начать жить"`, () => expect(response.body.title).toBe(`Как перестать беспокоиться и начать жить`));
+  test(`Article's title is "Как перестать беспокоиться и начать жить"`, () => expect(response.body.article.title).toBe(`Как перестать беспокоиться и начать жить`));
 });
 
 describe(`API creates an article if data is valid`, () => {
   const newArticle = {
-    title: `Дам погладить котика`,
-    picture: `pig`,
-    announce: `Иногда котики умываются после глажки`,
-    fullText: `Это мой кот. Зовут Винки!`,
+    title: `Дам погладить котика. Его зовут Анаконда. Это странное имя, но мне нравится`,
+    picture: ``,
+    announce: `Иногда котики умываются после глажки. Они прячутся от своих хозяев чтобы не обидеть`,
+    fullText: ``,
     categories: [`1`, `2`],
+    userId: 3
   };
 
   let app;
@@ -183,7 +186,8 @@ describe(`API refuses to create an article if data is invalid`, () => {
     announce: `Иногда котики умываются после глажки`,
     fullText: `Это мой кот. Зовут Винки!`,
     createdDate: `2020-05-22 11:11:11`,
-    category: [`Котики`]
+    category: [`Котики`],
+    userId: 3
   };
 
   let app;
@@ -206,11 +210,12 @@ describe(`API refuses to create an article if data is invalid`, () => {
 
 describe(`API changes existent article`, () => {
   const newArticle = {
-    title: `Дам погладить котика`,
-    picture: `wrestling`,
-    announce: `Иногда котики умываются после глажки`,
-    fullText: `Это мой кот. Зовут Винки!`,
-    categories: [`1`, `3`]
+    title: `Дам погладить котика. Это мой кот. Зовут Винки! Мяу мяу мяу гав гав`,
+    picture: ``,
+    announce: `Иногда котики умываются после глажки. Дада дада дада дада!!!`,
+    fullText: ``,
+    categories: [`1`, `3`],
+    userId: 3
   };
 
   let app;
@@ -226,18 +231,19 @@ describe(`API changes existent article`, () => {
   test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
   test(`Article is really changed`, () => request(app)
     .get(`/articles/3`)
-    .expect((res) => expect(res.body.title).toBe(`Дам погладить котика`))
+    .expect((res) => expect(res.body.article.title).toBe(`Дам погладить котика. Это мой кот. Зовут Винки! Мяу мяу мяу гав гав`))
   );
 });
 
 test(`API returns status code 404 when trying to change non-existent article`, async () => {
   const app = await createAPI();
   const validArticle = {
-    title: `Дам погладить котика`,
-    picture: `wrestling`,
-    announce: `Иногда котики умываются после глажки`,
-    fullText: `Это мой кот. Зовут Винки!`,
-    categories: [`1`, `3`]
+    title: `Дам погладить котика. Но потом верни, пожалуйста, а то я его очень люблю`,
+    picture: ``,
+    announce: `Иногда котики умываются после глажки. Они делают это тайно и с особым удовольствием`,
+    fullText: ``,
+    categories: [`1`, `3`],
+    userId: 3
   };
 
 
@@ -255,7 +261,8 @@ test(`API returns status code 400 when trying to change an article with invalid 
     announce: `Иногда котики умываются после глажки`,
     fullText: `Это мой кот. Зовут Винки!`,
     createdDate: `2020-05-22 11:11:11`,
-    category: [`Развлечения`]
+    category: [`Развлечения`],
+    userId: 3
   };
 
   return request(app)
@@ -315,7 +322,7 @@ describe(`API creates a comment if data is valid`, () => {
   beforeAll(async () => {
     app = await createAPI();
     response = await request(app)
-      .post(`/articles/2/comments`)
+      .post(`/articles/2/comments?userId=2`)
       .send(newComment);
   });
 

@@ -31,7 +31,7 @@ const HttpCode = {
 
 const API_PREFIX = `/api`;
 
-const picsNames = [`forest`, `sea`, `skyscraper`, `sea-fullsize`];
+const picsNames = [`forest@1x.jpg`, `sea@1x.jpg`, `skyscraper@1x.jpg`, `sea-fullsize@1x.jpg`];
 
 const categories = new Map([
   [`Деревья`, `trees`],
@@ -48,38 +48,38 @@ const categories = new Map([
 const users = [
   {
     email: `ivanov@example.com`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf99`,
-    firstName: `Иван`,
-    lastName: `Иванов`,
-    avatar: `avatar-1.png`
+    password: `gilespy666`,
+    userName: `Иван`,
+    userSurname: `Иванов`,
+    userAvatar: `avatar-1.png`
   },
   {
     email: `kazak@example.com`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb882cf98`,
-    firstName: `Родион`,
-    lastName: `Молотов`,
-    avatar: `avatar-2.png`
+    password: `sandramandra_`,
+    userName: `Родион`,
+    userSurname: `Молотов`,
+    userAvatar: `avatar-2.png`
   },
   {
     email: `westlife@example.com`,
-    passwordHash: `5f4dcc3b5aa76d5d61d8327deb882cf99`,
-    firstName: `Лось`,
-    lastName: `Восточный`,
-    avatar: `avatar-3.png`
+    password: `couching123334`,
+    userName: `Лось`,
+    userSurname: `Восточный`,
+    userAvatar: `avatar-3.png`
   },
   {
     email: `cardan@example.com`,
-    passwordHash: `5f4dcc3bd5aa765d61d8327deb882cf99`,
-    firstName: `Майкл`,
-    lastName: `Джонсон`,
-    avatar: `avatar-4.png`
+    password: `verona_@dfed`,
+    userName: `Майкл`,
+    userSurname: `Джонсон`,
+    userAvatar: `avatar-4.png`
   },
   {
     email: `petrov@example.com`,
-    passwordHash: `5f4dcc3b5aa765d61d8327deb8d82cf99`,
-    firstName: `Пётр`,
-    lastName: `Петров`,
-    avatar: `avatar-5.png`
+    password: `11111111`,
+    userName: `Пётр`,
+    userSurname: `Петров`,
+    userAvatar: `avatar-5.png`
   }
 ];
 
@@ -100,6 +100,25 @@ const RegisterMessage = {
   MAX_PASSWORD_LENGTH: `Пароль должен быть не больше 12 символов`,
   PASSWORDS_NOT_EQUALS: `Пароли не совпадают`,
   EMPTY_VALUE: `Не указано значение`,
+  USERNAME_INCORRECT_FILLING: `Поле "Имя" должно содержать только буквы`,
+  USESURNAME_INCORRECT_FILLING: `Поле "Фамилия" должно содержать только буквы`
+};
+
+const articleMessage = {
+  REQUIRED_FIELD: `Не оставляйте это поле пустым`,
+  MIN_LENGTH_FAILED: `Напишите не менее 30 символов`,
+  MAX_LENGTH_FAILED: `Вы превысили допустимый лимит`
+};
+
+const commentateMessage = {
+  REQUIRED_FIELD: `Сообщение не может быть пустым, напишите что-нибудь!`,
+  MIN_LENGTH_FAILED: `Напишите не менее 20 символов`
+};
+
+const categoryMessage = {
+  REQUIRED_FIELD: `Невозможно создать категорию без названия`,
+  MIN_LENGTH_FAILED: `Напишите не менее 5 символов`,
+  MAX_LENGTH_FAILED: `Напишите не более 30 символов`
 };
 
 const LoginMessage = {
@@ -129,6 +148,9 @@ module.exports = {
   RegisterMessage,
   LoginMessage,
   MIN_PASSWORD_LENGTH,
-  MAX_PASSWORD_LENGTH
+  MAX_PASSWORD_LENGTH,
+  commentateMessage,
+  articleMessage,
+  categoryMessage
 };
 

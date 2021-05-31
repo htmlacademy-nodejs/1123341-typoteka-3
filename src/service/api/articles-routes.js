@@ -12,11 +12,14 @@ module.exports = (app, articlesService, commentService) => {
   app.use(`/articles`, route);
 
   route.get(`/`, async (req, res) => {
-    const {offset, limit, comments} = req.query;
+    const {offset, limit, comments, userId} = req.query;
     let articles;
 
     if (limit || offset) {
       articles = await articlesService.findPage(limit, offset);
+
+    } else if (userId) {
+      articles = await articlesService.findAll(comments, {userId});
 
     } else {
       articles = await articlesService.findAll(comments);
@@ -25,6 +28,23 @@ module.exports = (app, articlesService, commentService) => {
     res
       .status(HttpCode.OK)
       .json(articles);
+  });
+
+  route.get(`/category/:CategoryId`, async (req, res) => {
+    const {CategoryId} = req.params;
+    const {offset, limit, comments} = req.query;
+    const articles = await articlesService.findAll(comments, {CategoryId, offset, limit});
+
+    if (articles) {
+      res
+        .status(HttpCode.OK)
+        .json(articles);
+
+    } else {
+      res
+        .status(HttpCode.NOT_FOUND)
+        .send(`Not found articles belonging to category with id:${CategoryId}`);
+    }
   });
 
   route.get(`/:articleId`, async (req, res) => {
@@ -59,13 +79,22 @@ module.exports = (app, articlesService, commentService) => {
     if (existArticle) {
       res
         .status(HttpCode.OK)
-        .send(`Updated`);
+        .json(existArticle);
 
     } else {
       res
         .status(HttpCode.NOT_FOUND)
         .send(`Not found article with id:${articleId}`);
     }
+  });
+
+  route.delete(`/comments/:commentId`, async (req, res) => {
+    const {commentId} = req.params;
+    await commentService.drop(commentId);
+
+    res
+      .status(HttpCode.OK)
+      .send(`Article Deleted`);
   });
 
   route.delete(`/:articleId`, async (req, res) => {
@@ -85,7 +114,15 @@ module.exports = (app, articlesService, commentService) => {
 
   route.get(`/:articleId/comments`, articleExistence(articlesService), async (req, res) => {
     const {articleId} = req.params;
-    const comments = await commentService.findAll(articleId);
+    const comments = await commentService.findAll({articleId});
+    res
+      .status(HttpCode.OK)
+      .json(comments);
+  });
+
+  route.get(`/my/:userId/comments`, async (req, res) => {
+    const {userId} = req.params;
+    const comments = await commentService.findAll({userId});
     res
       .status(HttpCode.OK)
       .json(comments);
@@ -108,7 +145,8 @@ module.exports = (app, articlesService, commentService) => {
 
   route.post(`/:articleId/comments`, [articleExistence(articlesService), schemeValidator(commentScheme)], async (req, res) => {
     const {articleId} = req.params;
-    const comment = await commentService.create(articleId, req.body);
+    const {userId} = req.query;
+    const comment = await commentService.create(articleId, userId, req.body);
 
     res
       .status(HttpCode.CREATED)

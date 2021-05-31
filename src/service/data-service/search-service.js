@@ -1,6 +1,7 @@
 'use strict';
 
 const {Op} = require(`sequelize`);
+const Sequelize = require(`sequelize`);
 const {Aliase} = require(`../../constants`);
 
 class SearchService {
@@ -9,13 +10,15 @@ class SearchService {
     this._Category = sequelize.models.Category;
   }
 
+  // ???? осталась проблема с регистрами у русских слов
   async findAll(searchText) {
     const articles = await this._Article.findAll({
-      where: {
-        title: {
-          [Op.substring]: searchText
-        }
-      },
+      where: Sequelize.where(
+          Sequelize.fn(`LOWER`, Sequelize.col(`title`)),
+          {
+            [Op.iLike]: `%${searchText}%`
+          }
+      ),
       include: [{model: this._Category, as: Aliase.CATEGORIES}],
     });
 

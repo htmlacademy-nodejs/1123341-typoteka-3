@@ -2,15 +2,7 @@ extends ../layout.pug
 
 block content
   .wrapper.wrapper--nobackground
-    header.header
-      a.header__logo.logo(href='#')
-        img.logo__image(src='/img/icons/logo-image-only.svg' alt='логотип Тайпотеки')
-        span.logo__name Типотека
-      button.button.button--colored.header__button-new Новая запись
-      .header__dropdown
-        a.button.button--burger.header__burger(href='#') Открыть меню
-        include ../partials/header-navigation.pug
-      a.header__search.button.button--search(href='#' aria-label='поиск по сайту')
+    include ../partials/header.pug
     main.main-page.main-page--padding
       section.main-page__publication.publication
         h1.publication__title Комментарии
@@ -18,11 +10,11 @@ block content
           each comment in sortedComments
             li.publication__list-item
               .publication__header
-                img.publication__list-image(src='/img/avatar-small-2.png' width='20' height='20' alt='Аватар пользователя')
-                b.publication__list-name Александр Петров
+                img.publication__list-image(src=`/img/${userAvatar}` width='20' height='20' alt='Аватар пользователя')
+                b.publication__list-name #{userName} #{userSurname}
                 time.publication__item-time(datetime=`${formatDate(dayjs, comment.createdAt, `tagFormat`)}`) #{formatDate(dayjs, comment.createdAt, `visualFormat`)}
               a.publication__item-text(href='#') #{comment.text}
               p.publication__text-strong #{comment.text}
-              button.publication__button.button.button--close-item(type='button')
+              button.publication__button.button.button--close-item(onclick=`window.location.href='/my/comments/delete/${comment.id}'` type='button')
                 span.visually-hidden Закрыть строку списка
     include ../partials/footer.pug
