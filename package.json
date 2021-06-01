@@ -10,7 +10,7 @@
     "start": "cross-env LOG_LEVEL=error nodemon --watch src/service -r dotenv/config ./src/service/service.js",
     "start::debug": "cross-env LOG_LEVEL=info NODE_ENV=development node -r dotenv/config ./src/service/service.js",
     "start-front-server": "nodemon --watch src/express --ext js,mjs,json,pug -r dotenv/config ./src/express/index.js",
-    "start-concurrently": "concurrently --names \"SSR, BACKEND\" --prefix \"{time}—{name}\" --prefix-colors \"green,blue\" \"npm run start::debug -- --server\" \"npm run start-front-server\" --kill-others-on-fail"
+    "start-concurrently": "concurrently --names \"BACKEND, SSR\" --prefix \"{time}—{name}\" --prefix-colors \"green,blue\" \"npm run start::debug -- --server\" \"npm run start-front-server\" --kill-others-on-fail"
   },
   "repository": {
     "type": "git",
