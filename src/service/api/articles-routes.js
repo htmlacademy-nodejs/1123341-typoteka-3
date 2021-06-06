@@ -146,11 +146,19 @@ module.exports = (app, articlesService, commentService) => {
   route.post(`/:articleId/comments`, [articleExistence(articlesService), schemeValidator(commentScheme)], async (req, res) => {
     const {articleId} = req.params;
     const {userId} = req.query;
-    const comment = await commentService.create(articleId, userId, req.body);
 
-    res
+    if (userId) {
+      const comment = await commentService.create(articleId, userId, req.body);
+
+      res
       .status(HttpCode.CREATED)
       .json(comment);
+
+    } else {
+      res
+        .status(HttpCode.BAD_REQUEST)
+        .send(`There is no registered user`);
+    }
   });
 };
 
