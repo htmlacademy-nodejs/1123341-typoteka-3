@@ -12,6 +12,7 @@ head
     li.pagination__item--active{
       pointer-events: none;
     }
+  script(src='/socket.io/socket.io.js')
 body
   -
     const formatDate = (generator, dateString = ``, format = `simpleFormat`) => {
@@ -60,5 +61,6 @@ body
   block content
   script(src='/js/vendor.js')
   script(src='/js/main.js')
+  script(src='/js/socket-io.js')
 
 
