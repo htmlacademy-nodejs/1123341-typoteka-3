@@ -66,7 +66,7 @@ function articlesMarkup(popularArticles) {
 
       return (
         `<li class="hot__list-item">
-          <a class="hot__list-link" href="/articles/${article.id}">${text}<sup class="hot__link-sup">${article.comments}</sup>
+          <a class="hot__list-link" href="/articles/${article.id}">${text}<sup class="hot__link-sup">${article.commentsCount}</sup>
           </a>
         </li>`
       );

@@ -47,14 +47,13 @@ socketIo.on(`connection`, (socket) => {
 
   socket.on(`user-comment`, async (commentText) => {
     let allArticles = await api.getArticles({comments: true});
-    const articleId = socket.handshake.headers.referer.slice(31);
-    allArticles = allArticles.map((item) => ({...item, comments: item.comments.length}));
-    const index = allArticles.findIndex((item) => item.id === Number(articleId));
-    allArticles[index].comments += 1;
+    const articleId = Number(socket.handshake.headers.referer.split(`/articles/`)[1]);
+    allArticles = allArticles.map((item) => ({...item, commentsCount: item.comments.length}));
+    const index = allArticles.findIndex((item) => item.id === articleId);
+    allArticles[index].commentsCount += 1;
     const popularArticles = allArticles
-      .sort((articleA, articleB) => articleB.comments - articleA.comments)
+      .sort((articleA, articleB) => articleB.commentsCount - articleA.commentsCount)
       .slice(0, 4);
-
 
     const cookies = cookie.parse(socket.request.headers.cookie || ``);
     const decodedToken = jwt.verify(cookies.authorization, JWT_ACCESS_SECRET);
