@@ -47,6 +47,7 @@ socketIo.on(`connection`, (socket) => {
 
   socket.on(`user-comment`, async (commentText) => {
     let allArticles = await api.getArticles({comments: true});
+
     const articleId = Number(socket.handshake.headers.referer.split(`/articles/`)[1]);
     allArticles = allArticles.map((item) => ({...item, commentsCount: item.comments.length}));
     const index = allArticles.findIndex((item) => item.id === articleId);
@@ -57,7 +58,13 @@ socketIo.on(`connection`, (socket) => {
 
     const cookies = cookie.parse(socket.request.headers.cookie || ``);
     const decodedToken = jwt.verify(cookies.authorization, JWT_ACCESS_SECRET);
-    socket.broadcast.emit(`send-out-comment`, {commentText, decodedToken, articleId, popularArticles});
+    const userData = {
+      userAvatar: decodedToken.userAvatar,
+      userName: decodedToken.userName,
+      userSurname: decodedToken.userSurname
+    };
+
+    socket.broadcast.emit(`send-out-comment`, {commentText, userData, articleId, popularArticles});
   });
 });
 

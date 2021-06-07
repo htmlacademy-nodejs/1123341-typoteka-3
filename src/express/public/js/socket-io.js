@@ -23,8 +23,8 @@ if (document.querySelector(`.comments__footer`)) {
 }
 
 if (document.querySelector(`.last__list`) && document.querySelector(`.hot__list`)) {
-  socketIo.addEventListener(`send-out-comment`, ({commentText, decodedToken, articleId, popularArticles}) => {
-    const commentTemplate = commentMarkup(commentText, decodedToken, articleId);
+  socketIo.addEventListener(`send-out-comment`, ({commentText, userData, articleId, popularArticles}) => {
+    const commentTemplate = commentMarkup(commentText, userData, articleId);
     const hotListTemplate = hotListMarkup(popularArticles);
 
     const commentContainer = document.querySelector(`.last__list`);
@@ -45,8 +45,8 @@ socketIo.addEventListener(`disconnect`, () => {
 });
 
 
-function commentMarkup(commentText, decodedToken, articleId) {
-  const {userName, userAvatar, userSurname} = decodedToken;
+function commentMarkup(commentText, userData, articleId) {
+  const {userName, userAvatar, userSurname} = userData;
   const text = commentText.length > 100 ? `${commentText.slice(0, 100)}...` : commentText;
 
   return (
